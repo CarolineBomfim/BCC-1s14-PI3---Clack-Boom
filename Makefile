@@ -4,7 +4,7 @@ EXEC = main
 LIBS_H = $(wildcard */*/*.h) $(wildcard */*.h) $(wildcard *.h)
 SRC=  $(wildcard */*/*.c) $(wildcard */*.c) $(wildcard *.c)
 OBJ= $(SRC:.c=.o)
-LIBS=-lallegro -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf -lallegro_primitives -lallegro_audio -lallegro_acodec
+LIBS=-lallegro -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf -lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui -lm -lcv -lhighgui -lcvaux
 
 all: $(EXEC)
 
