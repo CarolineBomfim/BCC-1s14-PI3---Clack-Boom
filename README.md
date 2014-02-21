@@ -8,10 +8,13 @@ Repositório para compartilhamento dos códigos, documentos e outros arquivos, r
 
 Integrantes
 
-Nome: Caroline Bomfim - git: CarolineBomfim 
-Nome: Mahaira Soares de Souza - git: 5614
-Nome: Rafael da Silva Santos - git: rafa-silva
-Nome: Thiago de Sousa Messias - git: messiasthi
+Nome: Caroline Bomfim -Git: CarolineBomfim
+
+Nome: Mahaira Soares de Souza - Git: 5614
+
+Nome: Rafael da Silva Santos - Git: rafa-silva
+
+Nome: Thiago de Sousa Messias - Git: messiasthi
 
 ============
 
