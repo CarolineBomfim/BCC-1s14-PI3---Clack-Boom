@@ -1,20 +1,18 @@
-CC=gcc -std=c99
-CFLAGS = -W -Wall -pedantic
+CC=gcc 
+CFLAGS = -std=c99 -W -Wall -pedantic
 EXEC = main
-LIBS_H = $(wildcard */*/*.h) $(wildcard */*.h) $(wildcard *.h)
-SRC=  $(wildcard */*/*.c) $(wildcard */*.c) $(wildcard *.c)
+SRC= $(wildcard */*.c) $(wildcard *.c)
 OBJ= $(SRC:.c=.o)
-LIBS=-lallegro -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf -lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui -lm -lcv -lhighgui -lcvaux
+LIBS=-lallegro -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf -lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_calib3d -lopencv_video -lopencv_features2d -lopencv_ml -lopencv_objdetect -lopencv_contrib -lopencv_legacy
+
 
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(LIBS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 %.o: %.c
-	$(CC) -o $@ -c $<
-
-.PHONY: clean
+	$(CC) $(CFLAGS) -o $@ -c $<
 
 clean:
-	rm -rf $(OBJ)
+	rm -f *~ *.o
