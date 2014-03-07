@@ -80,6 +80,7 @@ int main(){
 	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
 	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	ALLEGRO_BITMAP *direita = al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
+    
 	ArquivoLog("Sucesso ao criar buffers bitmap!");
 	int laco = 0;
 	int marca_rastreada = 0;
