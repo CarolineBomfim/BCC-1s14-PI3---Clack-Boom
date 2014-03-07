@@ -14,5 +14,9 @@ $(EXEC): $(OBJ)
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
+FILE_O = $(wildcard *.o) $(wildcard */*.o)
+
+.PHONY: clean
+
 clean:
-	rm -f *~ *.o
+	rm -f $(FILE_O)
