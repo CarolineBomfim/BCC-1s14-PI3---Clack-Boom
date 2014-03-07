@@ -72,7 +72,7 @@ int main(){
 	ArquivoLog("Registro de eventos!");
 
 	al_start_timer(temporizador);
-
+    // Todas as bibliotecas e arquivos foram carregados com sucesso!
 	ArquivoLog("Passou pelo start_timer");
 
 	unsigned char ***matriz = camera_aloca_matriz(cam);
@@ -121,8 +121,19 @@ int main(){
 					int r = cam->quadro[y][x][0];
 					int g = cam->quadro[y][x][1];
 					int b = cam->quadro[y][x][2];
-
-					if(r > g + b){
+                    // Aqui e definido qual as tonalidades de cor que sao captadas
+					// R = Red
+                    // G = Green
+                    // B = Blue
+                    // RGB e uma combinacao de cores que definem um tom
+                    // Esse tom sera rastreado, isso e somente um exemplo
+                    // Mas e possivel pegar a grande maioria de tons reais.
+                    // Mas na tela sao pegos todos os tons!
+                    if((r > 50 && r < 200)
+                       &&
+                       (b > 50 && b < 200)
+                       &&
+                       (g > 50 && g < 200)) {
 						marca_y += y;
 						marca_x += x;
 						cn++;
@@ -142,7 +153,7 @@ int main(){
 			}
 			camera_copia(cam, cam->quadro, esquerda);
 
-			ALLEGRO_COLOR cor = al_map_rgb_f(1, 0, 1);
+			ALLEGRO_COLOR cor = al_map_rgb_f(0, 0, 1);
 			
 			if(cn > 0){
 				al_draw_circle(marca_x / cn, marca_y / cn, 100, cor, 1);
