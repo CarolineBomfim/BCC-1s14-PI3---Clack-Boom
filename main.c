@@ -83,7 +83,8 @@ int main(){
 	ArquivoLog("Sucesso ao criar buffers bitmap!");
 	int laco = 0;
 	int marca_rastreada = 0;
-
+// Esse while esta esperando o movimento ou o clique no 'X'
+//
 	while(1){
 		ALLEGRO_EVENT evento;
 
@@ -115,12 +116,14 @@ int main(){
 			int cn = 0;
 			int y = 0;
 			int x = 0;
-
+            //Esse for esta fazendo a atualizacao da tela por frame, dessa forma ele esta atualizando os pixels de cor que esta identificando
 			for(y = 0; y < ALTURA; y++){
 				for(x = 0; x < LARGURA; x++){
-					int r = cam->quadro[y][x][0];
-					int g = cam->quadro[y][x][1];
-					int b = cam->quadro[y][x][2];
+                    //Essas variaveis estao recebendo o valor que a camera esta pegando, ou seja o valor rastreado por cada cor
+                    int r = cam->quadro[y][x][0];
+                    int g = cam->quadro[y][x][1];
+                    int b = cam->quadro[y][x][2];
+                    
                     // Aqui e definido qual as tonalidades de cor que sao captadas
 					// r = Red
                     // g = Green
@@ -129,21 +132,33 @@ int main(){
                     // Esse tom sera rastreado, isso e somente um exemplo
                     // Mas e possivel pegar a grande maioria de tons reais.
                     // Mas na tela sao pegos todos os tons!
-                    if((r > 50 && r < 200)
+                    if(
+                       (r > 50 && r < 200)
                        &&
                        (b > 50 && b < 200)
                        &&
-                       (g > 50 && g < 200)) {
+                       (g > 50 && g < 200)
+                       ) {
 						marca_y += y;
 						marca_x += x;
 						cn++;
+                        //Aqui esta sendo definido as cores da tela a direita
+                        //Ou seja, a replica em apenas duas cores
+                        // r = 255 = vermelho
+                        // g = 255 = verde
+                        // b = 255 = azul
+                        // matriz[y][x][0] = 255; = vermelho
+						// matriz[y][x][1] = 255; = verde
+						// matriz[y][x][2] = 255; = azul
 
+                        // Isso e igual ao preto
 						matriz[y][x][0] = 255;
 						matriz[y][x][1] = 255;
 						matriz[y][x][2] = 255;
 					}
 
 					else{
+                        // Isso e igual ao branco
 						matriz[y][x][0] = 0;
 						matriz[y][x][1] = 0;
 						matriz[y][x][2] = 0;
