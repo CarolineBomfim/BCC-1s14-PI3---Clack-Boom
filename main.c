@@ -122,9 +122,9 @@ int main(){
 					int g = cam->quadro[y][x][1];
 					int b = cam->quadro[y][x][2];
                     // Aqui e definido qual as tonalidades de cor que sao captadas
-					// R = Red
-                    // G = Green
-                    // B = Blue
+					// r = Red
+                    // g = Green
+                    // b = Blue
                     // RGB e uma combinacao de cores que definem um tom
                     // Esse tom sera rastreado, isso e somente um exemplo
                     // Mas e possivel pegar a grande maioria de tons reais.
