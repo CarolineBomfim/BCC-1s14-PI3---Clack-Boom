@@ -31,10 +31,11 @@ ALLEGRO_BITMAP *direita){
 			b = cam->quadro[y][x][2];	
 			//Nesse ponto é feita toda a identificação de posicionamento independente do que está sendo rastreado
 			//A identificação que estou fazendo é puramente com base na cor
-		    if((r > 200) && (g < 128) && (b < 128)) {
+		    if((r > 190) && (g < 128) && (b < 128)) {
 		    	mark_x += x;
 		    	mark_y += y;
 		    	mark++;
+			
 			    //Aqui esta sendo definido as cores da tela a direita
 			    //Ou seja, a replica em apenas duas cores
 			    // r = 255 = vermelho
