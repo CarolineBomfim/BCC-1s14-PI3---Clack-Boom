@@ -20,7 +20,10 @@ int main(){
 //Iniciando
 	//O camera inicializa pode ser modificado, 0 a camera primeria 1 a secundaria e assim por diante.
 	//camera *cam = camera_inicializa(0);
-	camera *cam = camera_inicializa(1);
+	camera *cam = camera_inicializa(0);
+
+	int LARGURA = cam->largura;
+	int ALTURA = cam->altura;
 
 	if(!cam)
 		erro("Erro ao iniciar a camera.");

@@ -9,6 +9,8 @@
 void TratamentoDaImagem(unsigned char ***matriz, camera *cam,
 ALLEGRO_BITMAP *esquerda,
 ALLEGRO_BITMAP *direita){
+	int LARGURA = cam->largura;
+	int ALTURA = cam->altura;
 	camera_atualiza(cam);
     float x_0 = ALTURA / 3;
     float x_1 = 2*(ALTURA / 3);
