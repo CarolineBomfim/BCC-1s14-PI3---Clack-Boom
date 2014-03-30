@@ -1,9 +1,6 @@
 #ifndef BIBLIOTECAS_H_
 #define BIBLIOTECAS_H_
-#define FPS 100
-
-// #define LARGURA 640
-// #define ALTURA 480
+#define FPS 180.0
 
 	int *IntAleatorio();
 	

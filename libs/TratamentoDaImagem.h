@@ -4,5 +4,6 @@
 void TratamentoDaImagem(unsigned char ***matriz,
 	camera *cam,
 	ALLEGRO_BITMAP *esquerda,
-	ALLEGRO_BITMAP *direita);
+	ALLEGRO_BITMAP *direita,
+	ALLEGRO_EVENT_QUEUE *EventoQueue);
 #endif

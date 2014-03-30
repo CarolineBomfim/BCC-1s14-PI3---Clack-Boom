@@ -2,10 +2,8 @@
 #include "libs/libs.h"
 #include "libs/Aleatorio.h"
 #include "libs/TratamentoDaImagem.h"
-
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -20,7 +18,7 @@ int main(){
 //Iniciando
 	//O camera inicializa pode ser modificado, 0 a camera primeria 1 a secundaria e assim por diante.
 	//camera *cam = camera_inicializa(0);
-	camera *cam = camera_inicializa(0);
+	camera *cam = camera_inicializa(1);
 
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
@@ -81,40 +79,11 @@ int main(){
 	ALLEGRO_BITMAP *direita = al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
     
 	ArquivoLog("Sucesso ao criar buffers bitmap!");
-	int laco = 0;
-	int marca_rastreada = 0;
-	// Esse while esta esperando o movimento ou o clique no 'X'
-	// int *x = IntAleatorio();
-	// printf("%d\t%d\n", x[0], x[1]);
-	while(1){
-		ALLEGRO_EVENT evento;
-		al_wait_for_event(EventoQueue, &evento);
-		switch(evento.type){
-			case ALLEGRO_EVENT_DISPLAY_CLOSE:
-			  laco = 1;
-			ArquivoLog("Finalizado pelo usuario!");
-			break;
 
-			case ALLEGRO_EVENT_TIMER:
-			marca_rastreada = 1;
-			break;
-			
-			default:
-			ArquivoLog("Evento desconhecido!");
-		}
+	TratamentoDaImagem(matriz, cam, esquerda, direita, EventoQueue);
+	
+	ArquivoLog("Processo de encerramento iniciado!");
 
-		if(laco == 1)
-			break;
-		
-		if(marca_rastreada && al_is_event_queue_empty(EventoQueue)) {
-            //Esse for esta fazendo a atualizacao da tela por frame, dessa forma ele esta atualizando os pixels de cor que esta identificando
-            TratamentoDaImagem(matriz, cam, esquerda, direita);
-			al_flip_display();
-		}
-	}
-	// free(r);
-	// free(g);
-	// free(b);
 	al_destroy_bitmap(direita);
 	al_destroy_bitmap(esquerda);
 
@@ -124,7 +93,6 @@ int main(){
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 
 	al_stop_timer(temporizador);
-	
 	al_destroy_event_queue(EventoQueue);
 	al_destroy_display(display);
 	al_destroy_timer(temporizador);
