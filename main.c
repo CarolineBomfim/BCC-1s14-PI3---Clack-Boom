@@ -17,7 +17,6 @@ int main(){
 
 //Iniciando
 	//O camera inicializa pode ser modificado, 0 a camera primeria 1 a secundaria e assim por diante.
-	//camera *cam = camera_inicializa(0);
 	camera *cam = camera_inicializa(1);
 
 	int LARGURA = cam->largura;
@@ -60,7 +59,6 @@ int main(){
 	if(!EventoQueue)
 		erro("Falha ao criar evento QUEUE");
 
-
 	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
 
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
@@ -70,25 +68,27 @@ int main(){
 
 	al_start_timer(temporizador);
     // Todas as bibliotecas e arquivos foram carregados com sucesso!
-	ArquivoLog("Passou pelo start_timer");
 
-	unsigned char ***matriz = camera_aloca_matriz(cam);
 
 	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
 	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	ALLEGRO_BITMAP *direita = al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
     
 	ArquivoLog("Sucesso ao criar buffers bitmap!");
+// ------------------------------------------------------------
+// ------------------------------------------------------------
 
-	TratamentoDaImagem(matriz, cam, esquerda, direita, EventoQueue);
+	TratamentoDaImagem( cam, esquerda, direita, EventoQueue, temporizador, display);
 	
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+
+
 	ArquivoLog("Processo de encerramento iniciado!");
 
 	al_destroy_bitmap(direita);
 	al_destroy_bitmap(esquerda);
 
-	camera_libera_matriz(cam, matriz);	
-	
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 

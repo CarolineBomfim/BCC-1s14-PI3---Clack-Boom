@@ -1,123 +1,146 @@
-#include "ArquivoLog.h"
-#include "../camera.h"
-#include "libs.h"
-
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_color.h>
 #include <allegro5/allegro_primitives.h>
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "ArquivoLog.h"
+#include "../camera.h"
+#include "libs.h"
+
+double MAXIMO(double r, double g, double b);
+double MINIMO(double r, double g, double b);
 void RGBparaHSL(double *RGB, double *HSL);
 void HSLparaRGB(double *HSL, double *RGB);
 void CapturaContorno(double *RGB, camera *cam);
 
 void TratamentoDaImagem(
-unsigned char ***matriz,
 camera *cam,
 ALLEGRO_BITMAP *esquerda,
 ALLEGRO_BITMAP *direita,
-ALLEGRO_EVENT_QUEUE *EventoQueue){
-	int LARGURA = cam->largura;
-	int ALTURA = cam->altura;
-	int EventoDetectado =
+ALLEGRO_EVENT_QUEUE *EventoQueue,
+ALLEGRO_TIMER *temporizador,
+ALLEGRO_DISPLAY *display){
+
+	unsigned char ***CAMERA = camera_aloca_matriz(cam);
+	unsigned char ***matriz = camera_aloca_matriz(cam);
+
+	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
+	al_register_event_source(EventoQueue, al_get_display_event_source(display));
+	
+	ArquivoLog("Entrou em TratamentoDaImagem");
+	
+	int largura = cam->largura;
+	int altura = cam->altura;
+
+	int EventoDetectado = 0;
 	int laco = 0;
-	while(1){
+
+	double *RGB =(double *)malloc(3*sizeof(long int));
+	double *HSL =(double *)malloc(3*sizeof(long int));
+	
+	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
+	al_register_event_source(EventoQueue, al_get_display_event_source(display));
+
+	while(laco != 1){
 	ALLEGRO_EVENT evento;
 	al_wait_for_event(EventoQueue, &evento);
+
 	switch(evento.type){
 		case ALLEGRO_EVENT_DISPLAY_CLOSE:
-		  laco = 1;
-		ArquivoLog("Finalizado pelo usuario!");
-		break;
+			laco = 1;
+			ArquivoLog("Finalizado pelo usuario!");
+			break;
 
 		case ALLEGRO_EVENT_TIMER:
-		EventoDetectado = 1;
-		break;
+			EventoDetectado = 1;
+			break;
 		
 		default:
-		ArquivoLog("Evento desconhecido!");
+			ArquivoLog("Evento desconhecido!");
 	}
-
-	if(laco == 1)
+	if(laco == 1){
 		break;
+	}
 	
-	if(EventoDetectado && al_is_event_queue_empty(EventoQueue)) {
-			double *RGB =(double *)malloc(3*sizeof(long int));
-			double *HSL =(double *)malloc(3*sizeof(long int));
+	if(EventoDetectado == 1 && al_is_event_queue_empty(EventoQueue)) {
+		EventoDetectado = 0;
+		camera_atualiza(cam);
+		for(int y = 0; y < altura; y++){
+			for(int x = 0; x < largura; x++){
+				//Essa atribuição define os valores respectivos de cada cor
+				RGB[0] = cam->quadro[y][x][0];
+				RGB[1] = cam->quadro[y][x][1];
+				RGB[2] = cam->quadro[y][x][2];
+				//Zona de tratamento
+				//Mudança do padrão de cor para ignorar a luz
+				RGBparaHSL(RGB, HSL);
+				HSLparaRGB(HSL, RGB);
+				
+				//Camptando a borda
+				
+				CAMERA[y][x][0] = RGB[0];
+				CAMERA[y][x][1] = RGB[1];
+				CAMERA[y][x][2] = RGB[2];
+				//Algoritimo de Roberts
 
-			// for(int i = 0; i <= 3; i++){
-				// HSL[i] =(float *)malloc(3*sizeof(long int));
-				// HSL[i] =(float *)malloc(3*sizeof(long int));
-			// }
-			camera_atualiza(cam);
+				// double BordaRed, Red_Aux1, Red_Aux2;
+				// Red_Aux1 =(double) (CAMERA[y][x][0]-CAMERA[y-1][x+1][0]);
+				// Red_Aux2 =(double) (CAMERA[y][x][0]-CAMERA[y-1][x-1][0]);
+				// Red_Aux1 =(double) Red_Aux1*Red_Aux1;
+				// Red_Aux2 =(double) Red_Aux2*Red_Aux2;
+				// BordaRed = sqrt(Red_Aux1+Red_Aux2);
+				// RGB[0] = (int)BordaRed;
+				
+				// double BordaGreen, Green_Aux1, Green_Aux2;
+				// Green_Aux1 = CAMERA[y][x][0]-CAMERA[y-1][x+1][0];
+				// Green_Aux2 = CAMERA[y][x][0]-CAMERA[y-1][x-1][0];
+				// BordaGreen = sqrt((Green_Aux1*Green_Aux1)+(Green_Aux2*Green_Aux2));
+				// RGB[1] = (int)BordaGreen;
+				
+				// double BordaBlue, Blue_Aux1, Blue_Aux2;
+				// Blue_Aux1 = CAMERA[y][x][0]-CAMERA[y-1][x+1][0];
+				// Blue_Aux2 = CAMERA[y][x][0]-CAMERA[y-1][x-1][0];
+				// BordaBlue = sqrt((Blue_Aux1*Blue_Aux1)+(Blue_Aux2*Blue_Aux2));
+				// RGB[2] = (int)BordaBlue;
 
-			int x = 0;
-			int y = 0;
-
-			for(y = 0; y < ALTURA; y++){
-				for(x = 0; x < LARGURA; x++){
-					//Essa atribuição define os valores respectivos de cada cor
-					RGB[0] = cam->quadro[y][x][0];
-					RGB[1] = cam->quadro[y][x][1];
-					RGB[2] = cam->quadro[y][x][2];
-
-					matriz[y][x][0] = RGB[0];
-					matriz[y][x][1] = RGB[1];
-					matriz[y][x][2] = RGB[2];
-					
-					RGBparaHSL(RGB, HSL);
-					HSLparaRGB(HSL, RGB);
-					
-					// al_color_rgb_to_hsl(RGB[0], RGB[1], RGB[2], HSL, HSL, HSL);
-					// al_color_hsl_to_rgb(HSL[0], HSL[1], HSL[2], RGB, RGB, RGB);
-
-					cam->quadro[y][x][0] = RGB[0];
-					cam->quadro[y][x][1] = RGB[1];
-					cam->quadro[y][x][2] = RGB[2];
-
-					// Fazendo a captura das bordas
-
-					double aux1;
-					double aux2;
-					double DIV = 0;
-
-					aux1 =  (cam->quadro[y-1][x-1]) - (cam->quadro[y-1][x+1]);
-					aux1 +=(int) ((2*(cam->quadro[y][x-1])) - (2*(cam->quadro[y][x+1])));
-					aux1 += (cam->quadro[y+1][x-1]) - (cam->quadro[y+1][x+1]);
-
-					aux2 =  (cam->quadro[y-1][x-1]) - (cam->quadro[y+1][x-1]);
-					aux2 +=(int) ((2*(cam->quadro[y -1][x])) - (2*(cam->quadro[y+1][x])));
-					aux2 += (cam->quadro[y-1][x+1]) - (cam->quadro[y+1][x+1]);
-
-					cam->quadro[y][x] = sqrt(aux1*aux1 + aux2*aux2);
-
-					if(DIV < cam->quadro[y][x])
-						DIV = cam->quadro[y][x];
-					
-					else
-						cam->quadro[y][x] = 0;
-
-					cam->quadro[y][x] = (cam->quadro[y][x] / DIV) * 255 + 0.5;
-					// Termino da captura de borda
-
+				//Fim da zona de tratamento
+				//Imagem inauterada para saber a diferença
+				matriz[y][x][0] = cam->quadro[y][x][0];
+				matriz[y][x][1] = cam->quadro[y][x][1]; 
+				matriz[y][x][2] = cam->quadro[y][x][2]; 
+				
+				//Define a imagem que irá sair no fim
+				CAMERA[y][x][0] = RGB[0];
+				CAMERA[y][x][1] = RGB[1];
+				CAMERA[y][x][2] = RGB[2];
 				}
 			}
+			camera_copia(cam, CAMERA, direita);
 			camera_copia(cam, matriz, esquerda);
-			camera_copia(cam, cam->quadro, direita);
 			al_flip_display();
-
-			// for(int i = 0; i < 3; i++)
-				// free(HSL[i]);
-			
-			free(HSL);
-			free(RGB);
 		}
-		al_flip_display();
 	}
 
+	free(HSL);
+	free(RGB);
+	camera_libera_matriz(cam, CAMERA);
+	camera_libera_matriz(cam, matriz);
 	return;
 }
+
+
+/*
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+* ------------------------------------------------------------------------------------------ *
+*/
 
 
 /*
@@ -133,6 +156,7 @@ double MAXIMO(double r, double g, double b) {
 			if(b >= r && b >= g)
 				return b;
 	}
+	return r;
 }
 
 /*
@@ -149,6 +173,7 @@ double MINIMO(double r, double g, double b) {
 			if(b <= r && b <= g)
 				return b;
 	}
+	return r;
 }
 
 /*
