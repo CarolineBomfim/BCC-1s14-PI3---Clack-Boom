@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "ArquivoLog.h"
-#include "../camera.h"
+#include "camera.h"
 #include "libs.h"
 
 void borda(unsigned char **imagem, int altura, int largura){

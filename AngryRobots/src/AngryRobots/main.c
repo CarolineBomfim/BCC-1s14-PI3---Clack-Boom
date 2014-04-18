@@ -1,7 +1,3 @@
-#include "camera.h"
-#include "libs/libs.h"
-#include "libs/Aleatorio.h"
-#include "libs/TratamentoDaImagem.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <allegro5/allegro.h>
@@ -9,6 +5,11 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
+
+#include "../../libs/camera.h"
+#include "../../libs/libs.h"
+#include "../../libs/Aleatorio.h"
+#include "../../libs/TratamentoDaImagem.h"
 
 int main(){
 	ALLEGRO_DISPLAY *display = NULL;
