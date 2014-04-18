@@ -68,22 +68,66 @@ int main(){
 
 	al_start_timer(temporizador);
     // Todas as bibliotecas e arquivos foram carregados com sucesso!
-
-
 	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
 	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	ALLEGRO_BITMAP *direita = al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
-    
+
+	unsigned char ***CAMERA = camera_aloca_matriz(cam);
+	unsigned char ***matriz = camera_aloca_matriz(cam);
+
+  int *cordenada = malloc(2*sizeof(int));
+  int EventoDetectado = 0;
+	int laco = 0;
+
 	ArquivoLog("Sucesso ao criar buffers bitmap!");
 // ------------------------------------------------------------
 // ------------------------------------------------------------
 
-	TratamentoDaImagem( cam, esquerda, direita, EventoQueue, temporizador, display);
+	while(1){
+		camera_atualiza(cam);
+		ALLEGRO_EVENT evento;
+		al_wait_for_event(EventoQueue, &evento);
+		switch(evento.type){
+			case ALLEGRO_EVENT_DISPLAY_CLOSE:
+				laco = 1;
+				ArquivoLog("Finalizado pelo usuario!");
+				break;
+
+			case ALLEGRO_EVENT_TIMER:
+				EventoDetectado = 1;
+				break;
+			default:
+				ArquivoLog("Evento desconhecido!");
+		}
+		if(laco == 1){
+			break;
+		}
+
+		if(EventoDetectado == 1){
+			TratamentoDaImagem(
+				cam,
+				esquerda,
+				direita,
+				EventoQueue,
+				temporizador,
+				display,
+				CAMERA,
+				matriz,
+				cordenada,
+				LARGURA,
+				ALTURA);
+			al_flip_display();
+		}
+	}
+// ------------------------------------------------------------
+// ------------------------------------------------------------
+	
+	camera_libera_matriz(cam, CAMERA);
+	camera_libera_matriz(cam, matriz);
 	
 // ------------------------------------------------------------
 // ------------------------------------------------------------
-
-
+	free(cordenada);
 	ArquivoLog("Processo de encerramento iniciado!");
 
 	al_destroy_bitmap(direita);
@@ -100,7 +144,6 @@ int main(){
 	al_shutdown_primitives_addon();
 	al_shutdown_image_addon();
 	al_uninstall_system();
-
 
 	camera_finaliza(cam);
 	ArquivoLog("Jogo finalizado com sucesso!");
