@@ -22,3 +22,10 @@ void ArquivoLog(char *msg) {
 
 	fclose(ArquivoLog);
 }
+
+void erro(char *msg){
+	printf("%s\n", msg);
+	ArquivoLog(msg);
+	exit(EXIT_FAILURE);
+}
+

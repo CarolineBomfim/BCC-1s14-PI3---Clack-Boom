@@ -1,6 +1,6 @@
 #ifndef _ALEATORIO_H_
 #define _ALEATORIO_H_
+void Coordenadas(int *coordenada);
 
-int *IntAleatorio();
-
+int Bomb();
 #endif

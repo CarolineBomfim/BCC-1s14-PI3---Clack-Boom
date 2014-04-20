@@ -8,7 +8,6 @@ ALLEGRO_EVENT_QUEUE *EventoQueue,
 ALLEGRO_TIMER *temporizador,
 ALLEGRO_DISPLAY *display,
 unsigned char ***CAMERA,
-unsigned char ***matriz,
 int *cordenada,
 int largura,
 int altura);

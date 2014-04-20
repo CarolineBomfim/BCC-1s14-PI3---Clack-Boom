@@ -6,7 +6,7 @@
 #include <math.h>
 #include "ArquivoLog.h"
 #include "camera.h"
-#include "libs.h"
+#include "define.h"
 
 void borda(unsigned char **imagem, int altura, int largura){
 	int x, y;
@@ -88,7 +88,6 @@ ALLEGRO_EVENT_QUEUE *EventoQueue,
 ALLEGRO_TIMER *temporizador,
 ALLEGRO_DISPLAY *display,
 unsigned char ***CAMERA,
-unsigned char ***matriz,
 int *cordenada,
 int largura,
 int altura){
