@@ -45,7 +45,7 @@ void Ball(){
 		al_rest(0.0000001);
 	}
 }
-void *Allegro(){	
+void *Allegro(ALLEGRO_THREAD *trd, void* argumentos){	
 	StartGame();
 		ALLEGRO_DISPLAY *display = al_create_display(LARGURA, ALTURA);
 	if(!display)
@@ -72,7 +72,6 @@ void *Allegro(){
 	if(!background || !bomb ||!ball || !robot || !target){
 		erro("Falha ao carregar bitmap.");
 	}
-	
 	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
 
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));

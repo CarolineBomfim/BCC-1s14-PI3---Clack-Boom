@@ -16,10 +16,11 @@
 int main(){
 	//Iniciando
 	ALLEGRO_THREAD *allegro = al_create_thread(Allegro, NULL);
-	// ALLEGRO_THREAD *opencv = al_create_thread(OpenCV, NULL);
+	ALLEGRO_THREAD *opencv = al_create_thread(OpenCV, NULL);
 	ArquivoLog("Jogo Iniciado!");
+	al_start_thread(opencv);
 	al_start_thread(allegro);
-
+	al_destroy_thread(opencv);
 	al_destroy_thread(allegro);
 	ArquivoLog("Jogo finalizado com sucesso!");
 	return 0;
