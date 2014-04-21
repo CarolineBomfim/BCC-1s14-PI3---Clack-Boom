@@ -9,13 +9,10 @@
 #include "define.h"
 #include "Aleatorio.h"
 #include "ArquivoLog.h"
-#include "OpenCVThread.h"
-typedef struct {
-	double x, y;
-	camera *cam;
-} XY;
-void Ball(camera *cam);
-void *Allegro(){	
+
+void captura(camera *cam, int *coordenadas);
+void Ball(camera *cam, ALLEGRO_DISPLAY *display);
+void Allegro(){	
 		camera *cam = camera_inicializa(0);
 	if(!cam)
 		fprintf(stderr,"Erro ao iniciar a camera.");
@@ -36,15 +33,15 @@ void *Allegro(){
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 	ArquivoLog("Registro de eventos!");
 
-	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/bg_f1.jpg");
-	ALLEGRO_BITMAP *bomb = al_load_bitmap("../res/img/bomb.png");
-	ALLEGRO_BITMAP *ball = al_load_bitmap("../res/img/ball.png");
-	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
-	ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
+	// ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/bg_f1.jpg");
+	// ALLEGRO_BITMAP *bomb = al_load_bitmap("../res/img/bomb.png");
+	// ALLEGRO_BITMAP *ball = al_load_bitmap("../res/img/ball.png");
+	// ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
+	// ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
 
-	if(!background || !bomb ||!ball || !robot || !target){
-		erro("Falha ao carregar bitmap.");
-	}
+	// if(!background || !bomb ||!ball || !robot || !target){
+	// 	erro("Falha ao carregar bitmap.");
+	// }
 	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
 
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
@@ -61,23 +58,23 @@ void *Allegro(){
 	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
 	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
 	
-	Ball(cam);
+	Ball(cam, display);
 	camera_finaliza(cam);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
-	al_destroy_bitmap(background);
-	al_destroy_bitmap(bomb);
-	al_destroy_bitmap(ball);
-	al_destroy_bitmap(robot);
-	al_destroy_bitmap(target);
+	// al_destroy_bitmap(background);
+	// al_destroy_bitmap(bomb);
+	// al_destroy_bitmap(ball);
+	// al_destroy_bitmap(robot);
+	// al_destroy_bitmap(target);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	al_destroy_display(display);
 	
 }
 
-void Ball(camera *cam){
+void Ball(camera *cam, ALLEGRO_DISPLAY *display){
 	camera_atualiza(cam);
 	int raio = 50;
 	int aux_x = LARGURA/2;
@@ -92,15 +89,28 @@ void Ball(camera *cam){
 	ALLEGRO_COLOR ball = al_map_rgb(255,0,255);
 	ALLEGRO_COLOR circle = al_map_rgb(0,255,255);
 	ALLEGRO_COLOR reset = al_map_rgb(0,0,0);
+
+	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
+	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);		
+
 	while(1){
+		camera_copia(cam, cam->quadro, esquerda);
 		captura(cam, coordenadas);
-		al_draw_circle(coordenadas[0],coordenadas[1], 100, circle, 1);
-		
 		if(result%3 <= 2){
 			al_draw_filled_circle(aux_x, aux_y, raio, red);
 		}
 		else{
 			al_draw_filled_circle(aux_x, aux_y, raio, blue);
+		}
+		al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
+		if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
+			if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
+				al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
+			}
+			al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
+		}
+		else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
+			al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
 		}
 		al_flip_display();
 		al_clear_to_color(reset);
@@ -124,7 +134,6 @@ void Ball(camera *cam){
 			direcao_y = 1;
 			aux_y = raio;
 		}
-		al_rest(0.0000001);
 	}
 	free(coordenadas);
 }
@@ -147,11 +156,11 @@ void captura(camera *cam, int *coordenadas){
       int b = cam->quadro[y][x][2];
 
       if(
-         (r > 200)
+         (r > 150)
          &&
-         (b > 75)
+         (b < 75)
          &&
-         (g > 75)
+         (g < 75)
          ) {
 				marca_y += y;
 				marca_x += x;
