@@ -86,18 +86,24 @@ void Ball(camera *cam){
 	int direcao_x = 1;
 	int result = Bomb();
 	int *coordenadas = malloc(sizeof(int));
+	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
+	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
+	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
+	ALLEGRO_COLOR ball = al_map_rgb(255,0,255);
+	ALLEGRO_COLOR circle = al_map_rgb(0,255,255);
+	ALLEGRO_COLOR reset = al_map_rgb(0,0,0);
 	while(1){
 		captura(cam, coordenadas);
-		al_draw_circle(coordenadas[0],coordenadas[1], 100, al_map_rgb(0,255,0), 1);
+		al_draw_circle(coordenadas[0],coordenadas[1], 100, circle, 1);
 		
 		if(result%3 <= 2){
-			al_draw_filled_circle(aux_x, aux_y, raio, al_map_rgb(255,0,0));
+			al_draw_filled_circle(aux_x, aux_y, raio, red);
 		}
 		else{
-			al_draw_filled_circle(aux_x, aux_y, raio, al_map_rgb(0,0,255));
+			al_draw_filled_circle(aux_x, aux_y, raio, blue);
 		}
 		al_flip_display();
-		al_clear_to_color(al_map_rgb(0,0,0));
+		al_clear_to_color(reset);
 		aux_x += 1.0 * direcao_x;
 		aux_y += 1.0 * direcao_y;
 	
