@@ -3,7 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "ArquivoLog.h"
 #include "define.h"
-
+#include "camera.h"
 void StartGame(){
 
 	if(!al_init()){

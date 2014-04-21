@@ -6,4 +6,5 @@
 // #define ALTURA 700
 #define LARGURA 640
 #define ALTURA 480
+
 #endif
