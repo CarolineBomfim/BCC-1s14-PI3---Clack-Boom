@@ -8,10 +8,12 @@
 #include <allegro5/allegro_primitives.h>
 #include "ArquivoLog.h"
 #include "camera.h"
-// #include "define.h"
-#define FPS 100
-#define LARGURA 640
-#define ALTURA 480
+#include "define.h"
+struct XY{
+	double x;
+	double y;
+};
+
 /*
 void *OpenCV(){
 	//O camera inicializa pode ser modificado, 0 a camera primeria 1 a secundaria e assim por diante.
@@ -50,10 +52,9 @@ void *OpenCV(){
 }
 */
 
-void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
+void *OpenCV(void *xy){
 
 	ALLEGRO_DISPLAY *display = NULL;
-	ALLEGRO_FONT *fonte1 = NULL;
 	ALLEGRO_BITMAP *background = NULL;
 
 //Iniciando
@@ -74,18 +75,9 @@ void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
 	if(!al_init_primitives_addon())
 		fprintf(stderr,"Falha ao carregar primitive_addons.");
 	
-	al_init_font_addon();
-
-	if(!al_init_ttf_addon())
-		fprintf(stderr,"Falha ao iniciar a biblioteca de ttf do Allegro.");
-
-	display = al_create_display(2*LARGURA, ALTURA);
+	display = al_create_display(LARGURA, ALTURA);
 	if(!display)
 		fprintf(stderr,"Falha ao criar display.");
-
-	fonte1 = al_load_font("fontes/comic.ttf", 50, 0);
-	if(!fonte1)
-		fprintf(stderr,"Falha ao carregar a fonte1.");
 
 	background = al_create_bitmap(LARGURA, ALTURA);
 	if(!background)
@@ -115,7 +107,7 @@ void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
 
 	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
 	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
-	ALLEGRO_BITMAP *direita = al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
+
     
 	fprintf(stderr,"Sucesso ao criar buffers bitmap!");
 	int laco = 0;
@@ -155,46 +147,45 @@ void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
             //Esse for esta fazendo a atualizacao da tela por frame, dessa forma ele esta atualizando os pixels de cor que esta identificando
 			for(y = 0; y < ALTURA; y++){
 				for(x = 0; x < LARGURA; x++){
-                    //Essas variaveis estao recebendo o valor que a camera esta pegando, ou seja o valor rastreado por cada cor
-                    int r = cam->quadro[y][x][0];
-                    int g = cam->quadro[y][x][1];
-                    int b = cam->quadro[y][x][2];
+          //Essas variaveis estao recebendo o valor que a camera esta pegando, ou seja o valor rastreado por cada cor
+          int r = cam->quadro[y][x][0];
+          int g = cam->quadro[y][x][1];
+          int b = cam->quadro[y][x][2];
                     
-                    // Aqui e definido qual as tonalidades de cor que sao captadas
+          // Aqui e definido qual as tonalidades de cor que sao captadas
 					// r = Red
-                    // g = Green
-                    // b = Blue
-                    // RGB e uma combinacao de cores que definem um tom
-                    // Esse tom sera rastreado, isso e somente um exemplo
-                    // Mas e possivel pegar a grande maioria de tons reais.
-                    // Mas na tela sao pegos todos os tons!
-                    if(
-                       (r > 50 && r < 200)
-                       &&
-                       (b > 50 && b < 200)
-                       &&
-                       (g > 50 && g < 200)
-                       ) {
+          // g = Green
+          // b = Blue
+          // RGB e uma combinacao de cores que definem um tom
+          // Esse tom sera rastreado, isso e somente um exemplo
+          // Mas e possivel pegar a grande maioria de tons reais.
+          // Mas na tela sao pegos todos os tons!
+          if(
+             (r > 50 && r < 200)
+             &&
+             (b > 50 && b < 200)
+             &&
+             (g > 50 && g < 200)
+             ) {
 						marca_y += y;
 						marca_x += x;
 						cn++;
-                        //Aqui esta sendo definido as cores da tela a direita
-                        //Ou seja, a replica em apenas duas cores
-                        // r = 255 = vermelho
-                        // g = 255 = verde
-                        // b = 255 = azul
-                        // matriz[y][x][0] = 255; = vermelho
+            //Aqui esta sendo definido as cores da tela a direita
+            //Ou seja, a replica em apenas duas cores
+            // r = 255 = vermelho
+            // g = 255 = verde
+            // b = 255 = azul
+            // matriz[y][x][0] = 255; = vermelho
 						// matriz[y][x][1] = 255; = verde
 						// matriz[y][x][2] = 255; = azul
-
-                        // Isso e igual ao preto
+            // Isso e igual ao preto
 						matriz[y][x][0] = 255;
 						matriz[y][x][1] = 255;
 						matriz[y][x][2] = 255;
 					}
 
 					else{
-                        // Isso e igual ao branco
+            // Isso e igual ao branco
 						matriz[y][x][0] = 0;
 						matriz[y][x][1] = 0;
 						matriz[y][x][2] = 0;
@@ -202,20 +193,22 @@ void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
 
 				}
 			}
-			camera_copia(cam, cam->quadro, esquerda);
+			camera_copia(cam, matriz, esquerda);
 
 			ALLEGRO_COLOR cor = al_map_rgb_f(0, 0, 1);
 			
+			struct XY *aux = xy;
+			struct XY *resultado = malloc(sizeof(struct XY));
 			if(cn > 0){
 				al_draw_circle(marca_x / cn, marca_y / cn, 100, cor, 1);
+				resultado->x = marca_x / cn;
+				resultado->y = marca_y / cn;
+				return ((void *)resultado);
 			}
-			
-			camera_copia(cam, matriz, direita);
 			
 			al_flip_display();
 		}
 	}
-	al_destroy_bitmap(direita);
 	al_destroy_bitmap(esquerda);
 
 	camera_libera_matriz(cam, matriz);	
@@ -232,8 +225,6 @@ void *OpenCV(ALLEGRO_THREAD *trd, void* argumentos	){
 	al_shutdown_primitives_addon();
 	al_shutdown_image_addon();
 	al_uninstall_system();
-
-
 	camera_finaliza(cam);
 	fprintf(stderr,"Jogo finalizado com sucesso!");
 }

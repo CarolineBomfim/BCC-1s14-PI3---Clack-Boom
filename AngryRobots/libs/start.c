@@ -3,6 +3,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "ArquivoLog.h"
 #include "define.h"
+
 void StartGame(){
 
 	if(!al_init()){

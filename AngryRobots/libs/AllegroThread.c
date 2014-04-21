@@ -1,3 +1,6 @@
+#include <pthread.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
@@ -5,7 +8,11 @@
 #include "define.h"
 #include "Aleatorio.h"
 #include "ArquivoLog.h"
-
+#include "OpenCVThread.h"
+struct XY{
+	double x;
+	double y;
+};
 void Ball(){
 	int raio = 50;
 	int aux_x = LARGURA/2;
@@ -13,7 +20,15 @@ void Ball(){
 	int direcao_y = 1;
 	int direcao_x = 1;
 	int result = Bomb();
+	struct XY xy;
+	struct XY *pointer_xy;
+	pthread_t opencv;
+	pthread_create(&opencv, NULL, &OpenCV, &xy);
 	while(1){
+		int r = pthread_join(opencv, (void *) &pointer_xy);
+		al_draw_circle((int)pointer_xy->x,(int)pointer_xy->y, 100, al_map_rgb(0,255,0), 1);
+		fprintf(stderr, "%f\t%f\n",(float)pointer_xy->x,(float)pointer_xy->y);
+		
 		if(result%3 <= 2){
 			al_draw_filled_circle(aux_x, aux_y, raio, al_map_rgb(255,0,0));
 		}
@@ -79,8 +94,7 @@ void *Allegro(ALLEGRO_THREAD *trd, void* argumentos){
 
 	ArquivoLog("Registro de eventos!");
 
-	al_start_timer(temporizador);
-	
+	al_start_timer(temporizador);	
 	// al_draw_scaled_bitmap(background,
 	//  0, 0, 
 	//  /*Tamanhao em escala horizontal que a imagem deve se ajustar*/al_get_bitmap_width(background), 
@@ -88,8 +102,9 @@ void *Allegro(ALLEGRO_THREAD *trd, void* argumentos){
 	//  0, 0,
 	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
 	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
-	Ball();
 	
+	Ball();
+
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
