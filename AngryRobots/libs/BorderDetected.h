@@ -25,7 +25,7 @@ void borda(unsigned char **imagem, int altura, int largura){
 					divisor =(float) borda[x][y];
 					fprintf(stderr, "%f\n", (double)borda[y][x]);
 				}
-				else if (divisor > borda[x][y]){
+				else{
 					borda[y][x] = 0;
 				}
 			}
