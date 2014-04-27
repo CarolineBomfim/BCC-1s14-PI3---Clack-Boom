@@ -1,7 +1,7 @@
 #ifndef _H_
 #define _H_
 
-void mediana(unsigned char **imagem, int largura, int altura){
+void mediana(unsigned char **imagem, int altura, int largura){
 	int x, y;
 	for(y = 0; y < altura; y++){
 		for(x = 0; x < largura; x++){
@@ -32,5 +32,23 @@ void mediana(unsigned char **imagem, int largura, int altura){
 		}
 	}
 }
-
+void limiar(unsigned char **imagem, int altura, int largura){
+	int x, y;
+	for(y = 0; y < altura; y++){
+		for(x = 0; x < largura; x++){
+			if(imagem[y][x] < 100){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 175 && imagem[y][x] < 200){
+				imagem[y][x] = 100;
+			}
+			else if(imagem[y][x] > 100 && imagem[y][x] < 175){
+				imagem[y][x] = 175;
+			}
+			else{
+				imagem[y][x] = 255;
+			}
+		}
+	}
+}
 #endif

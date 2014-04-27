@@ -33,7 +33,6 @@ int altura){
 	int x = 0;
 	int y = 0;
 	double gray = 0;
-	double *RGB = malloc(3*sizeof(double));
 	unsigned char **imagem = malloc(altura*sizeof(unsigned char *));
 	for(int a = 0; a < altura; a++){
 		imagem[a] = malloc(largura*sizeof(unsigned char));
@@ -42,22 +41,21 @@ int altura){
 		camera_atualiza(cam);
 		for(y = 0; y < altura; y++){
 			for(x = 0; x < largura; x++){
-				//Essa atribuição define os valores respectivos de cada cor
-				RGB[0] = cam->quadro[y][x][0];
-				RGB[1] = cam->quadro[y][x][1];
-				RGB[2] = cam->quadro[y][x][2];
-				imagem[y][x] = RGB[0];
 				//Zona de tratamento
 				/*-----------------*/
 	
 				//Mudança do padrão de cor para ignorar a luz
 				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
 				imagem[y][x] = gray;
+				cam->quadro[y][x][0] = imagem[y][x]; 
+				cam->quadro[y][x][1] = imagem[y][x]; 
+				cam->quadro[y][x][2] = imagem[y][x]; 
 				// Calculo da Mediana e Borda
 			}
 		}
+		// borda(imagem, altura, largura);
+		limiar(imagem, altura, largura);
 		mediana(imagem, altura, largura);
-		borda(imagem, altura, largura);
 		for(y = 0; y < altura; y++){
 			for(x = 0; x < largura; x++){
 				/*----------------*/			
@@ -71,7 +69,6 @@ int altura){
 		camera_copia(cam, cam->quadro, esquerda);
 		al_flip_display();
 	}
-	free(RGB);
 	for(int a = 0; a < altura; a++){
 		free(imagem[a]);
 	}free(imagem);
@@ -83,7 +80,7 @@ int altura){
 int main(){
 
 	StartGame();
-	camera *cam = camera_inicializa(0);
+	camera *cam = camera_inicializa(1);
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
 	
@@ -92,32 +89,32 @@ int main(){
 
 	display = al_create_display(2*LARGURA, ALTURA);
 	if(!display)
-		fprintf(stderr,"Falha ao criar display.\n");
+		
 
 	background = al_create_bitmap(LARGURA, ALTURA);
 	if(!background){
-		fprintf(stderr,"Falha ao criar bitmap brackground.\n");
+		
 	}
 
 	ALLEGRO_TIMER *temporizador = al_create_timer(1.0/FPS);
 	if(!temporizador){
-		fprintf(stderr,"Falha ao criar temporizador.\n");
+		
 	}
 
 	ALLEGRO_EVENT_QUEUE *EventoQueue = al_create_event_queue();
 	if(!EventoQueue){
-		fprintf(stderr,"Falha ao criar evento QUEUE\n");
+		
 	}
 
-	fprintf(stderr,"Sucesso ao carregar e criar fonte, imagens e eventos.\n");
+	
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 
-	fprintf(stderr,"Registro de eventos!\n");
+	
 
 	al_start_timer(temporizador);
     // Todas as bibliotecas e arquivos foram carregados com sucesso!
-	fprintf(stderr,"Passou pelo start_timer\n");
+	
 
 	unsigned char ***matriz = camera_aloca_matriz(cam);
 
@@ -149,6 +146,6 @@ int main(){
 
 
 	camera_finaliza(cam);
-	fprintf(stderr,"Jogo finalizado com sucesso!\n");
+	
 	EndGame();
 }
