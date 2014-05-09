@@ -11,6 +11,7 @@
 #include "AllegroThread.h"
 #include "MedianDetection.h"
 #include "BorderDetected.h"
+#include "ConvexHull.h"
 // #include "define.h"
 #define FPS 60.0
 
@@ -80,7 +81,7 @@ int altura){
 int main(){
 
 	StartGame();
-	camera *cam = camera_inicializa(1);
+	camera *cam = camera_inicializa(0);
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
 	

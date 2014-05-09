@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <time.h>
 void Coordenadas(int *coordenada){
-	int divisor = 100000010;
-	srand((unsigned)time(NULL));
-	int x = (int)rand() / divisor;
-	int y = (int)rand() / divisor;
+	int divisor = 20;
+	int x = (int)rand() % divisor;
+	int y = (int)rand() % divisor;
 	if(x <= 0){
 		x = 1;
 	}
@@ -16,8 +15,4 @@ void Coordenadas(int *coordenada){
 	coordenada[1] = y;
 }
 
-int Bomb(){
-	int divisor = 100000010;
-	srand((unsigned)time(NULL));
-	return (int)rand()/divisor;
-}
+int Bomb(){return ((int)rand()%20);}
