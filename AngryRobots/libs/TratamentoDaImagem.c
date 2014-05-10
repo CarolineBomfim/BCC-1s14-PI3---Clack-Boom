@@ -11,7 +11,7 @@
 #include "AllegroThread.h"
 #include "MedianDetection.h"
 #include "BorderDetected.h"
-#include "ConvexHull.h"
+// #include "ConvexHull.h"
 // #include "define.h"
 #define FPS 60.0
 
@@ -54,9 +54,9 @@ int altura){
 				// Calculo da Mediana e Borda
 			}
 		}
-		// borda(imagem, altura, largura);
 		limiar(imagem, altura, largura);
 		mediana(imagem, altura, largura);
+		// borda(imagem, altura, largura);
 		for(y = 0; y < altura; y++){
 			for(x = 0; x < largura; x++){
 				/*----------------*/			
