@@ -9,11 +9,17 @@
 #include "define.h"
 #include "Aleatorio.h"
 #include "ArquivoLog.h"
-
+#include "MedianDetection.h"
+#include "BorderDetected.h"
+#include "SegmentacaoCorte.h"
+#include "ConvexHull.h"
+#include "Centroide.h"
 void captura(camera *cam, int *coordenadas);
 void Ball(camera *cam, ALLEGRO_DISPLAY *display);
 void Allegro(){	
 		camera *cam = camera_inicializa(0);
+		int ALTURA = cam->altura;
+		int LARGURA = cam->largura;
 	if(!cam)
 		fprintf(stderr,"Erro ao iniciar a camera.");
 
@@ -53,29 +59,10 @@ void Allegro(){
 	// al_draw_scaled_bitmap(background,
 	//  0, 0, 
 	//  /*Tamanhao em escala horizontal que a imagem deve se ajustar*/al_get_bitmap_width(background), 
-	//  Tamanho em escala altura que a imagem deve se ajustaral_get_bitmap_height(background),
+	//  Tamanho em escala ALTURA que a imagem deve se ajustaral_get_bitmap_height(background),
 	//  0, 0,
 	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
 	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
-	
-	Ball(cam, display);
-	camera_finaliza(cam);
-	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
-	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
-	al_stop_timer(temporizador);
-	// al_destroy_bitmap(background);
-	// al_destroy_bitmap(bomb);
-	// al_destroy_bitmap(ball);
-	// al_destroy_bitmap(robot);
-	// al_destroy_bitmap(target);
-	al_destroy_timer(temporizador);
-	al_destroy_event_queue(EventoQueue);
-	al_destroy_display(display);
-	
-}
-
-void Ball(camera *cam, ALLEGRO_DISPLAY *display){
-	camera_atualiza(cam);
 	int raio = 50;
 	int aux_x = LARGURA/2;
 	int aux_y = ALTURA/2;
@@ -91,91 +78,107 @@ void Ball(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_COLOR reset = al_map_rgb(0,0,0);
 
 	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
-	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);		
-
-	while(1){
-		camera_copia(cam, cam->quadro, esquerda);
-		captura(cam, coordenadas);
-		if(result%3 <= 2){
-			al_draw_filled_circle(aux_x, aux_y, raio, red);
-		}
-		else{
-			al_draw_filled_circle(aux_x, aux_y, raio, blue);
-		}
-		al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
-		if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
-			if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
-				al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
+	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
+	camera_atualiza(cam);
+	// ------------------------------------------------------------------------------------------//
+while(1){
+int x = 0;
+	int y = 0;
+	double gray = 0;
+	unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
+	for(int a = 0; a < ALTURA; a++){
+		imagem[a] = malloc(LARGURA*sizeof(unsigned char));
+	}
+	
+		camera_atualiza(cam);
+		for(y = 0; y < ALTURA; y++){
+			for(x = 0; x < LARGURA; x++){
+				//Zona de tratamento
+				/*-----------------*/
+	
+				//Mudança do padrão de cor para ignorar a luz
+				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
+				imagem[y][x] = gray;
+				cam->quadro[y][x][0] = gray;
+				cam->quadro[y][x][1] = gray; 
+				cam->quadro[y][x][2] = gray; 
 			}
-			al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
 		}
-		else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
-			al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
+		limiar(imagem, ALTURA, LARGURA);
+		mediana(imagem, ALTURA, LARGURA);
+		ConvexHull(imagem, ALTURA, LARGURA);
+		SegmentacaoCorte(imagem, ALTURA, LARGURA);
+		Centroid(imagem, ALTURA, LARGURA, coordenadas);
+		for(y = 0; y < ALTURA; y++){
+			for(x = 0; x < LARGURA; x++){
+				/*----------------*/			
+				//Define a imagem que irá sair no fim
+				cam->quadro[y][x][0] = imagem[y][x];
+				cam->quadro[y][x][1] = imagem[y][x];
+				cam->quadro[y][x][2] = imagem[y][x];
+			}
 		}
+
+		camera_copia(cam, cam->quadro, esquerda);
 		al_flip_display();
-		al_clear_to_color(reset);
-		aux_x += 1.0 * direcao_x;
-		aux_y += 1.0 * direcao_y;
 	
-		if (aux_x > LARGURA - raio){
-			direcao_x = -1;
-			aux_x = LARGURA - raio;
+	for(int a = 0; a < ALTURA; a++){
+		free(imagem[a]);
+	}
+	free(imagem);	
+	// //
+	camera_copia(cam, cam->quadro, esquerda);		
+	if(result%3 <= 2){
+		al_draw_filled_circle(aux_x, aux_y, raio, red);
+	}
+	else{
+		al_draw_filled_circle(aux_x, aux_y, raio, blue);
+	}
+	al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
+	if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
+		if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
+			al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
 		}
-		else if ( aux_x < raio){
-			direcao_x = 1;
-			aux_x = raio;
-		}
-	
-		if(aux_y > ALTURA - raio){
-			direcao_y = -1;
-			aux_y = ALTURA - raio;
-		}
-		else if(aux_y < raio){
-			direcao_y = 1;
-			aux_y = raio;
-		}
+		al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
+	}
+	else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
+		al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
+	}
+	al_flip_display();
+	al_clear_to_color(reset);
+	aux_x += 1.0 * direcao_x;
+	aux_y += 1.0 * direcao_y;
+
+	if (aux_x > LARGURA - raio){
+		direcao_x = -1;
+		aux_x = LARGURA - raio;
+	}
+	else if ( aux_x < raio){
+		direcao_x = 1;
+		aux_x = raio;
+	}
+
+	if(aux_y > ALTURA - raio){
+		direcao_y = -1;
+		aux_y = ALTURA - raio;
+	}
+	else if(aux_y < raio){
+		direcao_y = 1;
+		aux_y = raio;
+	}
 	}
 	free(coordenadas);
-}
-
-void captura(camera *cam, int *coordenadas){
-	camera_atualiza(cam);
-	//Iniciando
-	float marca_x = 0;
-	float marca_y = 0;
+	camera_finaliza(cam);
+	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
+	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
+	al_stop_timer(temporizador);
+	// al_destroy_bitmap(background);
+	// al_destroy_bitmap(bomb);
+	// al_destroy_bitmap(ball);
+	// al_destroy_bitmap(robot);
+	// al_destroy_bitmap(target);
+	al_destroy_timer(temporizador);
+	al_destroy_event_queue(EventoQueue);
+	al_destroy_display(display);
 	
-	int cn = 0;
-	int y = 0;
-	int x = 0;
-        //Esse for esta fazendo a atualizacao da tela por frame, dessa forma ele esta atualizando os pixels de cor que esta identificando
-	for(y = 0; y < ALTURA; y++){
-		for(x = 0; x < LARGURA; x++){
-      //Essas variaveis estao recebendo o valor que a camera esta pegando, ou seja o valor rastreado por cada cor
-      int r = cam->quadro[y][x][0];
-      int g = cam->quadro[y][x][1];
-      int b = cam->quadro[y][x][2];
-
-      if(
-         (r > 150)
-         &&
-         (b < 75)
-         &&
-         (g < 75)
-         ) {
-				marca_y += y;
-				marca_x += x;
-				cn++;
-
-			}
-
-			else{
-				marca_y = marca_y;
-				marca_x = marca_x;
-			}
-		}
-	}
-	if(cn > 0){
-		coordenadas[0] = marca_x / cn;
-		coordenadas[1] = marca_y / cn;
-	}
 }
