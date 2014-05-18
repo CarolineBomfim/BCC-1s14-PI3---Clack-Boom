@@ -11,7 +11,8 @@
 #include "AllegroThread.h"
 #include "MedianDetection.h"
 #include "BorderDetected.h"
-// #include "ConvexHull.h"
+#include "SegmentacaoCorte.h"
+#include "ConvexHull.h"
 // #include "define.h"
 #define FPS 60.0
 
@@ -48,15 +49,16 @@ int altura){
 				//Mudança do padrão de cor para ignorar a luz
 				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
 				imagem[y][x] = gray;
-				cam->quadro[y][x][0] = imagem[y][x]; 
-				cam->quadro[y][x][1] = imagem[y][x]; 
-				cam->quadro[y][x][2] = imagem[y][x]; 
-				// Calculo da Mediana e Borda
+				cam->quadro[y][x][0] = gray;
+				cam->quadro[y][x][1] = gray; 
+				cam->quadro[y][x][2] = gray; 
 			}
 		}
 		limiar(imagem, altura, largura);
 		mediana(imagem, altura, largura);
-		// borda(imagem, altura, largura);
+		ConvexHull(imagem, altura, largura);
+		SegmentacaoCorte(imagem, altura, largura);
+		Centroid(imagem, altura, largura, coordenada);
 		for(y = 0; y < altura; y++){
 			for(x = 0; x < largura; x++){
 				/*----------------*/			
@@ -73,12 +75,9 @@ int altura){
 	for(int a = 0; a < altura; a++){
 		free(imagem[a]);
 	}free(imagem);
-	coordenada[0] =(int) largura/2;
-	coordenada[1] =(int) altura/2;
-	return;
 }
 
-int main(){
+/*int main(){
 
 	StartGame();
 	camera *cam = camera_inicializa(0);
@@ -144,9 +143,7 @@ int main(){
 	al_shutdown_primitives_addon();
 	al_shutdown_image_addon();
 	al_uninstall_system();
-
-
 	camera_finaliza(cam);
 	
 	EndGame();
-}
+}*/

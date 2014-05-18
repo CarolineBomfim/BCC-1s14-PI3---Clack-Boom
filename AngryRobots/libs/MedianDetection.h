@@ -36,17 +36,35 @@ void limiar(unsigned char **imagem, int altura, int largura){
 	int x, y;
 	for(y = 0; y < altura; y++){
 		for(x = 0; x < largura; x++){
-			if(imagem[y][x] < 100){
+			if(imagem[y][x] > 225 && imagem[y][x] < 255){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 200 && imagem[y][x] < 225){
 				imagem[y][x] = 0;
 			}
 			else if(imagem[y][x] > 175 && imagem[y][x] < 200){
 				imagem[y][x] = 0;
 			}
-			else if(imagem[y][x] > 100 && imagem[y][x] < 175){
+			else if(imagem[y][x] > 150 && imagem[y][x] < 175){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 125 && imagem[y][x] < 150){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 100 && imagem[y][x] < 125){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 75 && imagem[y][x] < 100){
+				imagem[y][x] = 255;
+			}
+			else if(imagem[y][x] > 50 && imagem[y][x] < 75){
+				imagem[y][x] = 0;
+			}
+			else if(imagem[y][x] > 25 && imagem[y][x] < 50){
 				imagem[y][x] = 0;
 			}
 			else{
-				imagem[y][x] = 255;
+				imagem[y][x] = 0;
 			}
 		}
 	}
