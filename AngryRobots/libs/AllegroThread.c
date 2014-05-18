@@ -106,8 +106,8 @@ int x = 0;
 		}
 		limiar(imagem, ALTURA, LARGURA);
 		mediana(imagem, ALTURA, LARGURA);
-		ConvexHull(imagem, ALTURA, LARGURA);
 		SegmentacaoCorte(imagem, ALTURA, LARGURA);
+		ConvexHull(imagem, ALTURA, LARGURA);
 		Centroid(imagem, ALTURA, LARGURA, coordenadas);
 		for(y = 0; y < ALTURA; y++){
 			for(x = 0; x < LARGURA; x++){
