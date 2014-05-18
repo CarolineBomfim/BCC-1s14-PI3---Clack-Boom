@@ -6,8 +6,8 @@ void Centroid(unsigned char **imagem, int altura, int largura, int *coordenada){
 	for(int a = 0; a< altura; a++){
 		for(int b = 0; b < largura; b++){
 			if(imagem[a][b] == 255){
-				markx += a;
-				marky += b;
+				markx += b;
+				marky += a;
 				cn++;
 			}
 		}
