@@ -55,10 +55,10 @@ void limiar(unsigned char **imagem, int altura, int largura){
 				imagem[y][x] = 0;
 			}
 			else if(imagem[y][x] > 75 && imagem[y][x] < 100){
-				imagem[y][x] = 255;
+				imagem[y][x] = 0;
 			}
 			else if(imagem[y][x] > 50 && imagem[y][x] < 75){
-				imagem[y][x] = 0;
+				imagem[y][x] = 255;
 			}
 			else if(imagem[y][x] > 25 && imagem[y][x] < 50){
 				imagem[y][x] = 0;
