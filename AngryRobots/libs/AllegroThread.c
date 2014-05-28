@@ -14,6 +14,15 @@
 #include "SegmentacaoCorte.h"
 #include "ConvexHull.h"
 #include "Centroide.h"
+#include "lista.h"
+
+typedef struct _elemento{
+	char id;
+	int x, y;
+	_elemento *anterior;
+	_elemento *proximo;
+}elemento;
+
 void captura(camera *cam, int *coordenadas);
 void Ball(camera *cam, ALLEGRO_DISPLAY *display);
 void Allegro(){	
@@ -81,21 +90,23 @@ void Allegro(){
 	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	camera_atualiza(cam);
 	// ------------------------------------------------------------------------------------------//
-while(1){
-int x = 0;
-	int y = 0;
-	double gray = 0;
-	unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
-	for(int a = 0; a < ALTURA; a++){
-		imagem[a] = malloc(LARGURA*sizeof(unsigned char));
-	}
-	
+	int ciclos = 0;
+	while(1){
+		ciclos++;
+		int x = 0;
+		int y = 0;
+		double gray = 0;
+		unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
+		for(int a = 0; a < ALTURA; a++){
+			imagem[a] = malloc(LARGURA*sizeof(unsigned char));
+		}
+		
 		camera_atualiza(cam);
 		for(y = 0; y < ALTURA; y++){
 			for(x = 0; x < LARGURA; x++){
 				//Zona de tratamento
 				/*-----------------*/
-	
+
 				//Mudança do padrão de cor para ignorar a luz
 				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
 				imagem[y][x] = gray;
@@ -108,7 +119,13 @@ int x = 0;
 		mediana(imagem, ALTURA, LARGURA);
 		SegmentacaoCorte(imagem, ALTURA, LARGURA);
 		ConvexHull(imagem, ALTURA, LARGURA);
-		Centroid(imagem, ALTURA, LARGURA, coordenadas);
+		if(ciclos == 1){
+			elemento *Ponto = RegistroVertices(imagem, ALTURA, LARGURA);
+		}
+		else if(ciclos == 20){
+			ciclos = 2;
+		}
+		Centroid(imagem, ALTURA, LARGURA, coordenadas, Ponto);
 		for(y = 0; y < ALTURA; y++){
 			for(x = 0; x < LARGURA; x++){
 				/*----------------*/			
@@ -121,52 +138,53 @@ int x = 0;
 
 		camera_copia(cam, cam->quadro, esquerda);
 		al_flip_display();
-	
-	for(int a = 0; a < ALTURA; a++){
-		free(imagem[a]);
-	}
-	free(imagem);	
-	// //
-	camera_copia(cam, cam->quadro, esquerda);		
-	if(result%3 <= 2){
-		al_draw_filled_circle(aux_x, aux_y, raio, red);
-	}
-	else{
-		al_draw_filled_circle(aux_x, aux_y, raio, blue);
-	}
-	al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
-	if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
-		if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
-			al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
+		
+		for(int a = 0; a < ALTURA; a++){
+			free(imagem[a]);
 		}
-		al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
-	}
-	else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
-		al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
-	}
-	al_flip_display();
-	al_clear_to_color(reset);
-	aux_x += 1.0 * direcao_x;
-	aux_y += 1.0 * direcao_y;
+		free(imagem);	
+		// //
+		camera_copia(cam, cam->quadro, esquerda);		
+		if(result%3 <= 2){
+			al_draw_filled_circle(aux_x, aux_y, raio, red);
+		}
+		else{
+			al_draw_filled_circle(aux_x, aux_y, raio, blue);
+		}
+		al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
+		if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
+			if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
+				al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
+			}
+			al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
+		}
+		else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
+			al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
+		}
+		al_flip_display();
+		al_clear_to_color(reset);
+		aux_x += 1.0 * direcao_x;
+		aux_y += 1.0 * direcao_y;
 
-	if (aux_x > LARGURA - raio){
-		direcao_x = -1;
-		aux_x = LARGURA - raio;
-	}
-	else if ( aux_x < raio){
-		direcao_x = 1;
-		aux_x = raio;
-	}
+		if (aux_x > LARGURA - raio){
+			direcao_x = -1;
+			aux_x = LARGURA - raio;
+		}
+		else if ( aux_x < raio){
+			direcao_x = 1;
+			aux_x = raio;
+		}
 
-	if(aux_y > ALTURA - raio){
-		direcao_y = -1;
-		aux_y = ALTURA - raio;
+		if(aux_y > ALTURA - raio){
+			direcao_y = -1;
+			aux_y = ALTURA - raio;
+		}
+		else if(aux_y < raio){
+			direcao_y = 1;
+			aux_y = raio;
+		}
 	}
-	else if(aux_y < raio){
-		direcao_y = 1;
-		aux_y = raio;
-	}
-	}
+	free(Ponto);
 	free(coordenadas);
 	camera_finaliza(cam);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
@@ -180,5 +198,4 @@ int x = 0;
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	al_destroy_display(display);
-	
 }
