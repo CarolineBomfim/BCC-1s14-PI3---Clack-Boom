@@ -1,4 +1,3 @@
-#include <pthread.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <allegro5/allegro.h>
@@ -15,16 +14,9 @@
 #include "ConvexHull.h"
 #include "Centroide.h"
 #include "lista.h"
-
-typedef struct _elemento{
-	char id;
-	int x, y;
-	_elemento *anterior;
-	_elemento *proximo;
-}elemento;
-
 void captura(camera *cam, int *coordenadas);
 void Ball(camera *cam, ALLEGRO_DISPLAY *display);
+
 void Allegro(){	
 		camera *cam = camera_inicializa(0);
 		int ALTURA = cam->altura;
@@ -122,10 +114,11 @@ void Allegro(){
 		if(ciclos == 1){
 			elemento *Ponto = RegistroVertices(imagem, ALTURA, LARGURA);
 		}
-		else if(ciclos == 20){
-			ciclos = 2;
+		else{
+			if(VerificaMovimento(Ponto, imagem, ALTURA, LARGURA)){
+				Centroid(imagem, ALTURA, LARGURA, coordenadas, Ponto);
+			}
 		}
-		Centroid(imagem, ALTURA, LARGURA, coordenadas, Ponto);
 		for(y = 0; y < ALTURA; y++){
 			for(x = 0; x < LARGURA; x++){
 				/*----------------*/			
@@ -138,7 +131,6 @@ void Allegro(){
 
 		camera_copia(cam, cam->quadro, esquerda);
 		al_flip_display();
-		
 		for(int a = 0; a < ALTURA; a++){
 			free(imagem[a]);
 		}
