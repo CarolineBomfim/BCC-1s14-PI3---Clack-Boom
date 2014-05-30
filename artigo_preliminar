@@ -8,7 +8,7 @@
 \input{structure.tex} 
 \hyphenation{Fortran hy-phen-ation}
 
-\title{\normalfont\spacedallcaps{Projeto Interativo III  Angry Robots}}
+\title{\normalfont\spacedallcaps{Projeto Interativo III \\ Angry Robots}}
 
 \author{Carolina Bomfim, Mahaira Soares de Souza, \\ Rafael da Silva Santos e Thiago Messias } 
  
@@ -85,20 +85,8 @@ com sucesso o objetivo do jogo.
 \\
 \section*{Revisão de Literatura}
 
-Não houve um jogo especifico em que nos baseamos, queríamos
-algo diferente pouco utilizado, em questão do OpenCV e allegro juntos.
-Em busca de um jogo futurista, começamos pelo ambiente onde se
-passaria o enredo do mesmo, e para a nossa sorte a primeira imagem
-que apareceu era de um Cyborg, claro, a partir daquele instate
-sabíamos que a história teria um robô, como personagem principal. A
-segunda parte de escolhas foi adaptar a nossa ideia a realidade
-atual, precisávamos ambientar algo futurista em 2D, já que o
-allegro não nos permite ir muito além. Pesquisamos diversos jogos
-com robôs e um site em especifico nos chamou atenção: Laboratório
-Garagem *LINK*, porém todos fugiam do ambiente proposto para nós, a
-maioria dos mesmo utilizavam arduinos, OpenCV e python, enquanto
-deveríamos desenvolver em Allegro 5, Linguagem C e OpenCV, a grande
-dificuldade foi o código de rastremento já que não havia base.
+Atualmente são criados diversos jogos por dia, e dentro desta massa existem pouco jogos com robôs como personagem principal. Ainda com limitações Existem muitos jogos com o mesmo objetivo do Angry Robots, um desses seria o Wii Resort, é semelhante em muitos aspectos, porém houveram algumas limitações na parte do desenvolvimento, foi permitido apenas o uso indireto do OpenCV, ou seja, só o que foi usado com esta biblioteca foram as funções da câmera, e a parte gráfica do jogo, foi criada usando apenas allegro 5 (o grande diferencial). A principal ideia era transporformar o robô que lança bolas em um jogo de tenis individual em um zangado. O jogo "Cube Slam", enredo é um jogo de tenis de um humado contra um urso, o diferencial igual ao Angry Robots.   
+Laboratório Garagem *LINK*, porém todos fugiam do ambiente proposto para nós, a maioria dos mesmo utilizavam arduinos, OpenCV e python, enquanto deveríamos desenvolver em Allegro 5, Linguagem C e OpenCV, a grande dificuldade foi o código de rastremento já que não havia base.
 \\
 \section*{Desenvolvimento}
 \begin{enumerate}
