@@ -1,7 +1,6 @@
 #ifndef _LISTA_H_
 #define _LISTA_H_
 
-struct _elemento;
 typedef struct _elemento elemento;
 struct _elemento{
 	char id;
@@ -10,14 +9,13 @@ struct _elemento{
 	elemento *proximo;
 };
 
-
 elemento AlocaPonto(int x, int y, elemento anterior){
 	elemento p;
-	p.id = (++anterior.id);
-	p.anterior.id = anterior.id;
-	anterior.proximo.id = p.id;
+	p.id = ++anterior.id;
+	p.anterior->id = anterior.id;
+	anterior.proximo->id = p.id;
 	p.proximo = NULL;
-	p.anterior = (anterior.id);
+	p.anterior->id = anterior.id;
 	p.x = x;
 	p.y = y;
 }
@@ -47,23 +45,23 @@ elemento *RegistroVertices(unsigned char **imagem, int altura, int largura){
 	}
 	return Ponto;
 }
-bool VerificaPonto(elemento *Ponto, unsigned char **imagem, int altura, int largura){
+int VerificaMovimento(elemento *Ponto, unsigned char **imagem, int altura, int largura){
 	elemento *P2 = RegistroVertices(imagem, altura, largura);
 	int count = 0;
 	for(int a = 0; a < altura; a++){
 		for(int b = 0; b < largura; b++){
 			if(P2[count].x < Ponto[count].x && P2[count].x > Ponto[count].x){
 				if(P2[count].y < Ponto[count].y && P2[count].y > Ponto[count].y){
-					return true;
+					return 1;
 				}
 			}
 			else if(P2[count].y < Ponto[count].y && P2[count].y > Ponto[count].y){
 				if(P2[count].x < Ponto[count].x && P2[count].x > Ponto[count].x){
-					return true;
+					return 1;
 				}
 			}
 		}
 	}
-	return false;
+	return 0;
 }
 #endif

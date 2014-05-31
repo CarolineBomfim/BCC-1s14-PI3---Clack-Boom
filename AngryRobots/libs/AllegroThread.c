@@ -3,6 +3,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_ttf.h>
 #include "start.h"
 #include "camera.h"
 #include "define.h"
@@ -13,7 +14,7 @@
 #include "SegmentacaoCorte.h"
 #include "ConvexHull.h"
 #include "Centroide.h"
-#include "lista.h"
+#include "game.h"
 void captura(camera *cam, int *coordenadas);
 void Ball(camera *cam, ALLEGRO_DISPLAY *display);
 
@@ -35,22 +36,6 @@ void Allegro(){
 	ALLEGRO_EVENT_QUEUE *EventoQueue = al_create_event_queue();
 	if(!EventoQueue)
 		erro("Falha ao criar evento QUEUE");
-
-	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
-	al_register_event_source(EventoQueue, al_get_display_event_source(display));
-	ArquivoLog("Registro de eventos!");
-
-	// ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/bg_f1.jpg");
-	// ALLEGRO_BITMAP *bomb = al_load_bitmap("../res/img/bomb.png");
-	// ALLEGRO_BITMAP *ball = al_load_bitmap("../res/img/ball.png");
-	// ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
-	// ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
-
-	// if(!background || !bomb ||!ball || !robot || !target){
-	// 	erro("Falha ao carregar bitmap.");
-	// }
-	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
-
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 
@@ -64,41 +49,45 @@ void Allegro(){
 	//  0, 0,
 	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
 	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
-	int raio = 50;
-	int aux_x = LARGURA/2;
-	int aux_y = ALTURA/2;
-	int direcao_y = 1;
-	int direcao_x = 1;
-	int result = Bomb();
-	int *coordenadas = malloc(sizeof(int));
-	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
-	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
-	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
-	ALLEGRO_COLOR ball = al_map_rgb(255,0,255);
-	ALLEGRO_COLOR circle = al_map_rgb(0,255,255);
-	ALLEGRO_COLOR reset = al_map_rgb(0,0,0);
 
-	ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
-	ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
+	int *coordenadas = malloc(2*sizeof(int));
 	camera_atualiza(cam);
 	// ------------------------------------------------------------------------------------------//
+	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/bg_f1.jpg");
+	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
+	ALLEGRO_COLOR White = al_map_rgb(255, 255, 255);
+	ALLEGRO_COLOR Red = al_map_rgb(255, 0, 0);
+	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 20, 0);
+	if(!Comics){
+		fprintf(stderr, "Erro ao carregar fonte\n");
+		exit(EXIT_FAILURE);
+	}
+	int loops = LARGURA;
+	int hp_robo = 100;
+	int velocidade_robo = 60;
+	int power = 100;
+	int velocidade_power = 10;
+	int robo_x = 0;
+	int x = 0;
+	int y = 0;
 	int ciclos = 0;
-	while(1){
-		ciclos++;
-		int x = 0;
-		int y = 0;
-		double gray = 0;
-		unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
-		for(int a = 0; a < ALTURA; a++){
-			imagem[a] = malloc(LARGURA*sizeof(unsigned char));
+	double gray = 0;
+	unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
+	int ***registro = malloc(ALTURA*sizeof(int **));
+	for(int a = 0; a < ALTURA; a++){
+		registro[a] = malloc(LARGURA*sizeof(int *));
+		for(int b = 0; b < LARGURA; b++){
+			registro[a][b] = malloc(loops*sizeof(int));
 		}
-		
+		imagem[a] = malloc(LARGURA*sizeof(unsigned char));
+	}
+
+	while(1){
+		al_clear_to_color(White);
+		al_draw_bitmap(background,0,0,0);
 		camera_atualiza(cam);
 		for(y = 0; y < ALTURA; y++){
 			for(x = 0; x < LARGURA; x++){
-				//Zona de tratamento
-				/*-----------------*/
-
 				//Mudança do padrão de cor para ignorar a luz
 				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
 				imagem[y][x] = gray;
@@ -111,82 +100,89 @@ void Allegro(){
 		mediana(imagem, ALTURA, LARGURA);
 		SegmentacaoCorte(imagem, ALTURA, LARGURA);
 		ConvexHull(imagem, ALTURA, LARGURA);
-		if(ciclos == 1){
-			elemento *Ponto = RegistroVertices(imagem, ALTURA, LARGURA);
+		Centroid(imagem, ALTURA, LARGURA, coordenadas);
+		// if(ciclos == 20){
+		// 	Registra(imagem, ALTURA, LARGURA, registro);
+		// }
+		// else if(ciclos == 90){
+		// 	LimpaTela(imagem, ALTURA, LARGURA, registro);
+		// 	ciclos = 0;
+		// }
+		int newPosition = Bomb();
+		if(newPosition > LARGURA){
+			newPosition = LARGURA - 100.0;
+		}
+		else if(newPosition < 0){
+			newPosition = 100;
+		}
+		if(newPosition > robo_x){
+			al_draw_bitmap(robot, robo_x, ALTURA/2, 0);
+			robo_x+=velocidade_robo;		
 		}
 		else{
-			if(VerificaMovimento(Ponto, imagem, ALTURA, LARGURA)){
-				Centroid(imagem, ALTURA, LARGURA, coordenadas, Ponto);
-			}
+			al_draw_bitmap(robot, robo_x, ALTURA/2, 0);
+			robo_x-=velocidade_robo;
 		}
-		for(y = 0; y < ALTURA; y++){
-			for(x = 0; x < LARGURA; x++){
-				/*----------------*/			
-				//Define a imagem que irá sair no fim
-				cam->quadro[y][x][0] = imagem[y][x];
-				cam->quadro[y][x][1] = imagem[y][x];
-				cam->quadro[y][x][2] = imagem[y][x];
-			}
-		}
-
-		camera_copia(cam, cam->quadro, esquerda);
-		al_flip_display();
-		for(int a = 0; a < ALTURA; a++){
-			free(imagem[a]);
-		}
-		free(imagem);	
-		// //
-		camera_copia(cam, cam->quadro, esquerda);		
-		if(result%3 <= 2){
-			al_draw_filled_circle(aux_x, aux_y, raio, red);
+		if(colisao(coordenadas, robo_x) == 1){
+			hp_robo -= 10;
+			velocidade_robo += 10;
+			power = 0;
+			velocidade_power += 10;
 		}
 		else{
-			al_draw_filled_circle(aux_x, aux_y, raio, blue);
+			power = 0;
+			velocidade_power -= 30;
 		}
-		al_draw_circle(coordenadas[0],coordenadas[1], raio, circle, 10);
-		if((coordenadas[0] <= aux_x+50) && (coordenadas[1] <= aux_y+50)){
-			if((coordenadas[0] == aux_x) && (coordenadas[1] == aux_y)){
-				al_draw_circle(coordenadas[0],coordenadas[1], raio, ball, 10);
+		if(velocidade_robo > 60){
+			velocidade_robo = 60;
+		}
+		else if( velocidade_robo < 10){
+			velocidade_robo = 10;
+		}
+		power+= velocidade_power;
+		if(velocidade_power <= 0){
+			velocidade_power = 1;
+		}
+		else if(velocidade_power > 50 ){
+			velocidade_power = 50;
+		}
+		if(power < 100){
+			power += velocidade_power;
+			if(power > 100){
+				power = 100;
 			}
-			al_draw_circle(coordenadas[0],coordenadas[1], raio, green, 10);
 		}
-		else if((coordenadas[0] > aux_x+50) && (coordenadas[1] > aux_y+50)){
-			al_draw_circle(coordenadas[0],coordenadas[1], raio, blue, 10);
+		else if(power < 0){
+			power = 0;
 		}
+		if(hp_robo <= 0){
+			fprintf(stderr, "congratulation\n");
+			break;
+		}
+		else{
+			velocidade_robo += 10;
+		}
+		ciclos++;
+		al_draw_text(Comics,Red, 10.0, 10.0, 0, "rRobo:");
+		al_draw_textf(Comics,Red, 70.0, 10.0, 0, "%d%%", hp_robo);
+		al_draw_text(Comics, White, LARGURA - (500.0 - 370), ALTURA - 30.0, 0, "Power:");
+		al_draw_textf(Comics, White, LARGURA -( 430.0 - 370), ALTURA - 30.0, 0, "%d%%", power);
 		al_flip_display();
-		al_clear_to_color(reset);
-		aux_x += 1.0 * direcao_x;
-		aux_y += 1.0 * direcao_y;
-
-		if (aux_x > LARGURA - raio){
-			direcao_x = -1;
-			aux_x = LARGURA - raio;
-		}
-		else if ( aux_x < raio){
-			direcao_x = 1;
-			aux_x = raio;
-		}
-
-		if(aux_y > ALTURA - raio){
-			direcao_y = -1;
-			aux_y = ALTURA - raio;
-		}
-		else if(aux_y < raio){
-			direcao_y = 1;
-			aux_y = raio;
-		}
 	}
-	free(Ponto);
+	for(int a = 0; a < ALTURA; a++){
+		free(imagem[a]);
+		for(int b = 0; b < LARGURA; b++){
+			free(registro[a][b]);
+		}
+		free(registro[a]);
+	}
+	free(imagem);
+	free(registro);
 	free(coordenadas);
 	camera_finaliza(cam);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
-	// al_destroy_bitmap(background);
-	// al_destroy_bitmap(bomb);
-	// al_destroy_bitmap(ball);
-	// al_destroy_bitmap(robot);
-	// al_destroy_bitmap(target);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	al_destroy_display(display);
