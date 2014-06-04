@@ -20,8 +20,8 @@ void Ball(camera *cam, ALLEGRO_DISPLAY *display);
 
 void Allegro(){	
 		camera *cam = camera_inicializa(0);
-		int ALTURA = cam->altura;
-		int LARGURA = cam->largura;
+		int altura = cam->altura;
+		int largura = cam->largura;
 	if(!cam)
 		fprintf(stderr,"Erro ao iniciar a camera.");
 
@@ -62,7 +62,7 @@ void Allegro(){
 		fprintf(stderr, "Erro ao carregar fonte\n");
 		exit(EXIT_FAILURE);
 	}
-	int loops = LARGURA;
+	int loops = largura;
 	int hp_robo = 100;
 	int velocidade_robo = 60;
 	int power = 100;
@@ -72,22 +72,22 @@ void Allegro(){
 	int y = 0;
 	int ciclos = 0;
 	double gray = 0;
-	unsigned char **imagem = malloc(ALTURA*sizeof(unsigned char *));
-	int ***registro = malloc(ALTURA*sizeof(int **));
-	for(int a = 0; a < ALTURA; a++){
-		registro[a] = malloc(LARGURA*sizeof(int *));
-		for(int b = 0; b < LARGURA; b++){
+	unsigned char **imagem = malloc(altura*sizeof(unsigned char *));
+	int ***registro = malloc(altura*sizeof(int **));
+	for(int a = 0; a < altura; a++){
+		registro[a] = malloc(largura*sizeof(int *));
+		for(int b = 0; b < largura; b++){
 			registro[a][b] = malloc(loops*sizeof(int));
 		}
-		imagem[a] = malloc(LARGURA*sizeof(unsigned char));
+		imagem[a] = malloc(largura*sizeof(unsigned char));
 	}
 
 	while(1){
 		al_clear_to_color(White);
 		al_draw_bitmap(background,0,0,0);
 		camera_atualiza(cam);
-		for(y = 0; y < ALTURA; y++){
-			for(x = 0; x < LARGURA; x++){
+		for(y = 0; y < altura; y++){
+			for(x = 0; x < largura; x++){
 				//Mudança do padrão de cor para ignorar a luz
 				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
 				imagem[y][x] = gray;
@@ -96,16 +96,18 @@ void Allegro(){
 				cam->quadro[y][x][2] = gray; 
 			}
 		}
-		limiar(imagem, ALTURA, LARGURA);
-		mediana(imagem, ALTURA, LARGURA);
-		SegmentacaoCorte(imagem, ALTURA, LARGURA);
-		ConvexHull(imagem, ALTURA, LARGURA);
-		Centroid(imagem, ALTURA, LARGURA, coordenadas);
+		borda(imagem, altura, largura);
+		limiar(imagem, altura, largura);
+		mediana(imagem, altura, largura);
+		borda(imagem, altura, largura);
+		SegmentacaoCorte(imagem, altura, largura);
+		ConvexHull(imagem, altura, largura);
+		Centroid(imagem, altura, largura, coordenadas);
 		// if(ciclos == 20){
-		// 	Registra(imagem, ALTURA, LARGURA, registro);
+		// 	Registra(imagem, altura, largura, registro);
 		// }
 		// else if(ciclos == 90){
-		// 	LimpaTela(imagem, ALTURA, LARGURA, registro);
+		// 	LimpaTela(imagem, altura, largura, registro);
 		// 	ciclos = 0;
 		// }
 		int newPosition = Bomb();
@@ -162,6 +164,7 @@ void Allegro(){
 		else{
 			velocidade_robo += 10;
 		}
+		al_draw_circle(coordenadas[0],coordenadas[1], 10, al_map_rgb(255,0,0), 10 );
 		ciclos++;
 		al_draw_text(Comics,Red, 10.0, 10.0, 0, "rRobo:");
 		al_draw_textf(Comics,Red, 70.0, 10.0, 0, "%d%%", hp_robo);
