@@ -54,4 +54,8 @@ void loadingTela()
     al_flip_display();
    
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4dfaae1cd296af644bac2712a19c486b0be3e4ea
