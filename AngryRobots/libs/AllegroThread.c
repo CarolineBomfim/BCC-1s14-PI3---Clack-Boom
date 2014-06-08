@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_primitives.h>
 #include "start.h"
 #include "camera.h"
 #include "define.h"
@@ -14,16 +15,14 @@
 #include "SegmentacaoCorte.h"
 #include "ConvexHull.h"
 #include "Centroide.h"
-#include "game.h"
-void captura(camera *cam, int *coordenadas);
-void Ball(camera *cam, ALLEGRO_DISPLAY *display);
 
 void Allegro(){	
-		camera *cam = camera_inicializa(0);
-		int altura = cam->altura;
-		int largura = cam->largura;
+	camera *cam = camera_inicializa(0);
+	int LARGURA = cam->largura;
+	int ALTURA = cam->altura;
+
 	if(!cam)
-		fprintf(stderr,"Erro ao iniciar a camera.");
+		erro("Erro ao iniciar a camera.");
 
 	ALLEGRO_DISPLAY *display = al_create_display(LARGURA, ALTURA);
 	if(!display)
@@ -36,6 +35,25 @@ void Allegro(){
 	ALLEGRO_EVENT_QUEUE *EventoQueue = al_create_event_queue();
 	if(!EventoQueue)
 		erro("Falha ao criar evento QUEUE");
+
+	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
+	al_register_event_source(EventoQueue, al_get_display_event_source(display));
+	ArquivoLog("Registro de eventos!");
+	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 20, 0);
+	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/background.jpg");
+	ALLEGRO_BITMAP *bexiga = al_load_bitmap("../res/img/bexiga.png");
+	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
+	ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
+	ALLEGRO_BITMAP *target1 = al_load_bitmap("../res/img/target1.png");
+	ALLEGRO_BITMAP *hpBar = al_load_bitmap("../res/img/hpBar.png");
+	ALLEGRO_BITMAP *powerBar = al_load_bitmap("../res/img/powerBar.png");
+
+
+	if(/*!background || !bomb ||*/ !bexiga || !robot || !target || !target1){
+		erro("Falha ao carregar bitmap.");
+	}
+	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
+
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 
@@ -49,143 +67,129 @@ void Allegro(){
 	//  0, 0,
 	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
 	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
-
-	int *coordenadas = malloc(2*sizeof(int));
-	camera_atualiza(cam);
-	// ------------------------------------------------------------------------------------------//
-	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/bg_f1.jpg");
-	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
-	ALLEGRO_COLOR White = al_map_rgb(255, 255, 255);
-	ALLEGRO_COLOR Red = al_map_rgb(255, 0, 0);
-	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 20, 0);
-	if(!Comics){
-		fprintf(stderr, "Erro ao carregar fonte\n");
-		exit(EXIT_FAILURE);
-	}
-	int loops = largura;
-	int hp_robo = 100;
-	int velocidade_robo = 60;
-	int power = 100;
-	int velocidade_power = 10;
-	int robo_x = 0;
-	int x = 0;
-	int y = 0;
+	int DROBO = 60;
 	int ciclos = 0;
-	double gray = 0;
-	unsigned char **imagem = malloc(altura*sizeof(unsigned char *));
-	int ***registro = malloc(altura*sizeof(int **));
-	for(int a = 0; a < altura; a++){
-		registro[a] = malloc(largura*sizeof(int *));
-		for(int b = 0; b < largura; b++){
-			registro[a][b] = malloc(loops*sizeof(int));
-		}
-		imagem[a] = malloc(largura*sizeof(unsigned char));
-	}
-
+	double rVelocidade = 5.0;
+	int aux_x = LARGURA/2;
+	int aux_y = ALTURA/2;
+	int direcao_y = 1;
+	int direcao_x = 1;
+	int uPower = 0;
+	int hpRobo = 100;
+	int nBexigas = 25;
+	int *coordenadas = malloc(2*sizeof(int));
+	// ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
+	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
+	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
+	// ALLEGRO_COLOR bexiga = al_map_rgb(255,0,255);
+	// ALLEGRO_COLOR circle = al_map_rgb(0,255,255);
+	ALLEGRO_COLOR reset = al_map_rgb(0,0,0);
+	// ALLEGRO_BITMAP *buffer = al_get_backbuffer(display);
+	// ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
+	// ------------------------------------------------------------------------------------------//
 	while(1){
-		al_clear_to_color(White);
-		al_draw_bitmap(background,0,0,0);
+		int hp;
+		int power;
+		al_draw_bitmap(background, 0, 0, 0);
+		while(1){
+			if(((hp/10)*5) >= hpRobo){
+				hp = 0;
+				break;
+			}
+			al_draw_bitmap(hpBar, hp, 10,0);
+			hp+=30;
+		}
+		while(1){
+			if(((power/10)*5) >= uPower){
+				power = 0;
+				break;
+			}
+			al_draw_bitmap(powerBar, power*-(LARGURA-power), 60, 0);
+			power+=30;
+		}
+		ciclos++;
 		camera_atualiza(cam);
-		for(y = 0; y < altura; y++){
-			for(x = 0; x < largura; x++){
-				//Mudança do padrão de cor para ignorar a luz
-				gray = ((cam->quadro[y][x][0] * 0.2126)+(cam->quadro[y][x][1] * 0.7154)+(cam->quadro[y][x][2] * 0.0722));
-				imagem[y][x] = gray;
-				cam->quadro[y][x][0] = gray;
-				cam->quadro[y][x][1] = gray; 
-				cam->quadro[y][x][2] = gray; 
+		// mediana(cam);
+		// SegmentacaoCorte(imagem, ALTURA, LARGURA);
+		int MovDetected = Centroid(cam->quadro, cam->altura, cam->largura, coordenadas);
+		al_draw_bitmap(robot, aux_x, aux_y, 0);
+		if(MovDetected == 1){
+			al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
+		}
+		int targetx = coordenadas[0];
+		int targety = coordenadas[1];
+		if(nBexigas > 0){
+			if(uPower == 100){
+				al_draw_bitmap(bexiga, coordenadas[0], coordenadas[1], 0);
+				nBexigas--;
+				if((targetx < aux_x + 30 && targetx > aux_x - 30) && (targety < aux_y + 30 && targety > aux_y - 30)){
+					hpRobo-=5;
+					al_draw_text(Comics,green, LARGURA/2, ALTURA/2, 0, "Acertou!");
+					uPower = 0;
+				}
+				else{
+					uPower = 0;
+					al_draw_text(Comics,red, LARGURA/2, ALTURA/2, 0, "Errou!");
+				}
 			}
 		}
-		borda(imagem, altura, largura);
-		limiar(imagem, altura, largura);
-		mediana(imagem, altura, largura);
-		borda(imagem, altura, largura);
-		SegmentacaoCorte(imagem, altura, largura);
-		ConvexHull(imagem, altura, largura);
-		Centroid(imagem, altura, largura, coordenadas);
-		// if(ciclos == 20){
-		// 	Registra(imagem, altura, largura, registro);
-		// }
-		// else if(ciclos == 90){
-		// 	LimpaTela(imagem, altura, largura, registro);
-		// 	ciclos = 0;
-		// }
-		int newPosition = Bomb();
-		if(newPosition > LARGURA){
-			newPosition = LARGURA - 100.0;
-		}
-		else if(newPosition < 0){
-			newPosition = 100;
-		}
-		if(newPosition > robo_x){
-			al_draw_bitmap(robot, robo_x, ALTURA/2, 0);
-			robo_x+=velocidade_robo;		
-		}
-		else{
-			al_draw_bitmap(robot, robo_x, ALTURA/2, 0);
-			robo_x-=velocidade_robo;
-		}
-		if(colisao(coordenadas, robo_x) == 1){
-			hp_robo -= 10;
-			velocidade_robo += 10;
-			power = 0;
-			velocidade_power += 10;
-		}
-		else{
-			power = 0;
-			velocidade_power -= 30;
-		}
-		if(velocidade_robo > 60){
-			velocidade_robo = 60;
-		}
-		else if( velocidade_robo < 10){
-			velocidade_robo = 10;
-		}
-		power+= velocidade_power;
-		if(velocidade_power <= 0){
-			velocidade_power = 1;
-		}
-		else if(velocidade_power > 50 ){
-			velocidade_power = 50;
-		}
-		if(power < 100){
-			power += velocidade_power;
-			if(power > 100){
-				power = 100;
-			}
-		}
-		else if(power < 0){
-			power = 0;
-		}
-		if(hp_robo <= 0){
-			fprintf(stderr, "congratulation\n");
+		if(nBexigas == 0){
+			ArquivoLog("Acabou as bexigas!");
 			break;
 		}
-		else{
-			velocidade_robo += 10;
+		if(uPower < 100){
+			uPower++;
 		}
-		al_draw_circle(coordenadas[0],coordenadas[1], 10, al_map_rgb(255,0,0), 10 );
-		ciclos++;
-		al_draw_text(Comics,Red, 10.0, 10.0, 0, "rRobo:");
-		al_draw_textf(Comics,Red, 70.0, 10.0, 0, "%d%%", hp_robo);
-		al_draw_text(Comics, White, LARGURA - (500.0 - 370), ALTURA - 30.0, 0, "Power:");
-		al_draw_textf(Comics, White, LARGURA -( 430.0 - 370), ALTURA - 30.0, 0, "%d%%", power);
+		if(targetx < aux_x + 50 && targetx > aux_x - 50 && targety < aux_y + 50 && targety > aux_y - 50){
+			al_draw_bitmap(target1, coordenadas[0] - 30,coordenadas[1] - 30, 0);
+		}
 		al_flip_display();
-	}
-	for(int a = 0; a < ALTURA; a++){
-		free(imagem[a]);
-		for(int b = 0; b < LARGURA; b++){
-			free(registro[a][b]);
+		al_clear_to_color(reset);
+		if(aux_x >= LARGURA){
+			aux_x -= 10;
 		}
-		free(registro[a]);
+		if(aux_y >= ALTURA){
+			aux_y -= 10; 
+
+		}
+		aux_x += rVelocidade * direcao_x;
+		aux_y += rVelocidade * direcao_y;
+		if (aux_x > LARGURA - (DROBO + 30)){
+			direcao_x = -1;
+			aux_x = LARGURA - DROBO;
+		}
+		else if (aux_x < (DROBO + 30)){
+			direcao_x = 1;
+			aux_x = DROBO;
+		}
+
+		if(aux_y > ALTURA - DROBO){
+			direcao_y = -1;
+			aux_y = ALTURA - DROBO;
+		}
+		else if(aux_y < DROBO){
+			direcao_y = 1;
+			aux_y = DROBO; 	
+		}
+		if(ciclos == 50){
+			ciclos = 0;
+			rVelocidade+=5;
+		}
+		if(rVelocidade == 25){
+			break;
+		}
 	}
-	free(imagem);
-	free(registro);
+	fprintf(stderr, "%d\n", nBexigas);
 	free(coordenadas);
 	camera_finaliza(cam);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
+	al_destroy_bitmap(background);
+	al_destroy_bitmap(bexiga);
+	al_destroy_bitmap(robot);
+	al_destroy_bitmap(target);
+	al_destroy_bitmap(target1);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	al_destroy_display(display);
