@@ -26,7 +26,6 @@ void StartGame(){
 }
 
 void EndGame(){
-	al_shutdown_ttf_addon();
 	al_shutdown_font_addon();
 	al_shutdown_primitives_addon();
 	al_shutdown_image_addon();

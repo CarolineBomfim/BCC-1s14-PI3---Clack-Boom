@@ -16,17 +16,10 @@
 #include "ConvexHull.h"
 #include "Centroide.h"
 
-void Allegro(){	
-	camera *cam = camera_inicializa(0);
+int Allegro(camera *cam, ALLEGRO_DISPLAY *display){	
+	
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
-
-	if(!cam)
-		erro("Erro ao iniciar a camera.");
-
-	ALLEGRO_DISPLAY *display = al_create_display(LARGURA, ALTURA);
-	if(!display)
-		erro("Falha ao criar display.");
 
 	ALLEGRO_TIMER *temporizador = al_create_timer(1.0/FPS);
 	if(!temporizador)
@@ -72,7 +65,7 @@ void Allegro(){
 	double rVelocidade = 5.0;
 	int aux_x = LARGURA/2;
 	int aux_y = ALTURA/2;
-	int direcao_y = 1;
+	int direcao_y = -1;
 	int direcao_x = 1;
 	int uPower = 0;
 	int hpRobo = 100;
@@ -88,6 +81,20 @@ void Allegro(){
 	// ALLEGRO_BITMAP *esquerda = al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	// ------------------------------------------------------------------------------------------//
 	while(1){
+		ALLEGRO_EVENT evento;
+		int finalizar = 0;
+		al_wait_for_event(EventoQueue, &evento);
+		switch(evento.type){
+			case ALLEGRO_EVENT_DISPLAY_CLOSE:
+				finalizar = 1;
+				ArquivoLog("Finalizado pelo usuario!");
+			break;
+			default:
+			ArquivoLog("Evento desconhecido!");
+		}
+		if(finalizar == 1){
+			return 1;
+		}
 		int hp;
 		int power;
 		al_draw_bitmap(background, 0, 0, 0);
@@ -109,7 +116,6 @@ void Allegro(){
 		}
 		ciclos++;
 		camera_atualiza(cam);
-		// mediana(cam);
 		// SegmentacaoCorte(imagem, ALTURA, LARGURA);
 		int MovDetected = Centroid(cam->quadro, cam->altura, cam->largura, coordenadas);
 		al_draw_bitmap(robot, aux_x, aux_y, 0);
@@ -125,11 +131,13 @@ void Allegro(){
 				if((targetx < aux_x + 30 && targetx > aux_x - 30) && (targety < aux_y + 30 && targety > aux_y - 30)){
 					hpRobo-=5;
 					al_draw_text(Comics,green, LARGURA/2, ALTURA/2, 0, "Acertou!");
+					al_flip_display();
 					uPower = 0;
 				}
 				else{
 					uPower = 0;
 					al_draw_text(Comics,red, LARGURA/2, ALTURA/2, 0, "Errou!");
+					al_flip_display();
 				}
 			}
 		}
@@ -171,17 +179,28 @@ void Allegro(){
 			direcao_y = 1;
 			aux_y = DROBO; 	
 		}
-		if(ciclos == 50){
+		if(ciclos == 80){
 			ciclos = 0;
 			rVelocidade+=5;
 		}
-		if(rVelocidade == 25){
+		if(rVelocidade == 50){
 			break;
 		}
+		if(aux_y == -1){
+			aux_y++;
+		}
+		else{
+			aux_y--;
+		}
+		if(aux_x == -1){
+			aux_x++;
+		}
+		else{
+			aux_x--;
+		}
+		
 	}
-	fprintf(stderr, "%d\n", nBexigas);
 	free(coordenadas);
-	camera_finaliza(cam);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
@@ -192,5 +211,6 @@ void Allegro(){
 	al_destroy_bitmap(target1);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
-	al_destroy_display(display);
+	
+	return 0;
 }
