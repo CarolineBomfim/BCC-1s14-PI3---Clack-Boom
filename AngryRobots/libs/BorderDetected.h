@@ -1,5 +1,5 @@
-#ifndef _G_
-#define _G_
+#ifndef _BORDER_H_
+#define _BORDER_H_
 
 void borda(unsigned char **imagem, int altura, int largura){
 	double divisor = 0;

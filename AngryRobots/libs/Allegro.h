@@ -95,8 +95,8 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		}
 		ciclos++;
 		camera_atualiza(cam);
-		// SegmentacaoCorte(imagem, ALTURA, LARGURA);
-		int MovDetected = Centroid(cam->quadro, cam->altura, cam->largura, coordenadas);
+		histograma(cam);
+		int MovDetected = Centroid(cam, coordenadas);
 		al_draw_bitmap(robot, aux_x, aux_y, 0);
 		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 		int targetx = coordenadas[0];

@@ -71,24 +71,22 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 			al_draw_text(Comics, green, LARGURA/2, 100, 0, "Parabens! Deseja tentar novamente? ");
 		}
 		camera_atualiza(cam);
-		int MovDetected = Centroid(cam->quadro, cam->altura, cam->largura, coordenadas);
+		int MovDetected = Centroid(cam, coordenadas);
 		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 		int targetx = coordenadas[0];
-		int targety = coordenadas[1];
+		
 
-		al_draw_text(Comics,green, LARGURA/2, ALTURA/2 + 30, 0, "Iniciar");
-		al_draw_text(Comics,red, LARGURA/2, ALTURA/2 - 30, 0, "Sair");
+		al_draw_text(Comics,green, (LARGURA/2) - 300, ALTURA/2 + 30, 0, "Iniciar");
+		al_draw_text(Comics,red, (LARGURA/2) + 200, ALTURA/2 - 30, 0, "Sair");
 
-		if(targetx < (LARGURA/2) + 50 && targetx > (LARGURA/2 )- 50 &&
-			targety < (ALTURA/2) + 25 && targety > (ALTURA/2) - 25){
+		if(targetx < (LARGURA/2) + 100){
 			al_draw_bitmap(target1, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 			decisao = 0;
 			if(MovDetected == 1){
 				break;
 			}
 		}
-		else if(targetx < (LARGURA/2) - 50 && targetx > (LARGURA/2 )- 100 &&
-			targety < (ALTURA/2) - 35 && targety > (ALTURA/2) - 55){
+		else if(targetx < (LARGURA/2) - 100){
 			al_draw_bitmap(target1, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 			decisao = 1;
 			if(MovDetected == 1){
