@@ -88,6 +88,10 @@ int Centroid(unsigned char ***imagem, int altura, int largura, int *coordenada){
 				marky += a;
 				markx += b;
 				cn++;
+			}else{
+				h = 0;
+				s = 0;
+				v = 0;				
 			}
 		}
 	}

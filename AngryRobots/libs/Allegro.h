@@ -1,20 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_image.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_primitives.h>
-#include "start.h"
-#include "camera.h"
-#include "define.h"
-#include "Aleatorio.h"
-#include "ArquivoLog.h"
-#include "MedianDetection.h"
-#include "BorderDetected.h"
-#include "SegmentacaoCorte.h"
-#include "ConvexHull.h"
-#include "Centroide.h"
+#ifndef _ALLEGRO_H_
+#define _ALLEGRO_H_
 
 int Allegro(camera *cam, ALLEGRO_DISPLAY *display){	
 	
@@ -53,13 +38,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ArquivoLog("Registro de eventos!");
 
 	al_start_timer(temporizador);	
-	// al_draw_scaled_bitmap(background,
-	//  0, 0, 
-	//  /*Tamanhao em escala horizontal que a imagem deve se ajustar*/al_get_bitmap_width(background), 
-	//  Tamanho em escala ALTURA que a imagem deve se ajustaral_get_bitmap_height(background),
-	//  0, 0,
-	//  /*Largura que a imagem irá se adequar*/ (float)posicao_x,
-	//  /*Altura que a imagem irá se adequar*/(float)posicao_y, 0);
+
 	int DROBO = 60;
 	int ciclos = 0;
 	double rVelocidade = 5.0;
@@ -90,7 +69,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 				ArquivoLog("Finalizado pelo usuario!");
 			break;
 			default:
-			ArquivoLog("Evento desconhecido!");
+			break;
 		}
 		if(finalizar == 1){
 			return 1;
@@ -111,7 +90,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 				power = 0;
 				break;
 			}
-			al_draw_bitmap(powerBar, power*-(LARGURA-power), 60, 0);
+			al_draw_bitmap(powerBar, power, 60, 0);
 			power+=30;
 		}
 		ciclos++;
@@ -119,25 +98,21 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		// SegmentacaoCorte(imagem, ALTURA, LARGURA);
 		int MovDetected = Centroid(cam->quadro, cam->altura, cam->largura, coordenadas);
 		al_draw_bitmap(robot, aux_x, aux_y, 0);
-		if(MovDetected == 1){
-			al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
-		}
+		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 		int targetx = coordenadas[0];
 		int targety = coordenadas[1];
-		if(nBexigas > 0){
+		if(nBexigas > 0 && MovDetected == 1){
 			if(uPower == 100){
 				al_draw_bitmap(bexiga, coordenadas[0], coordenadas[1], 0);
 				nBexigas--;
 				if((targetx < aux_x + 30 && targetx > aux_x - 30) && (targety < aux_y + 30 && targety > aux_y - 30)){
 					hpRobo-=5;
 					al_draw_text(Comics,green, LARGURA/2, ALTURA/2, 0, "Acertou!");
-					al_flip_display();
 					uPower = 0;
 				}
 				else{
 					uPower = 0;
 					al_draw_text(Comics,red, LARGURA/2, ALTURA/2, 0, "Errou!");
-					al_flip_display();
 				}
 			}
 		}
@@ -198,6 +173,9 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		else{
 			aux_x--;
 		}
+		if(hpRobo <= 1){
+			return 2;
+		}
 		
 	}
 	free(coordenadas);
@@ -214,3 +192,4 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	
 	return 0;
 }
+#endif
