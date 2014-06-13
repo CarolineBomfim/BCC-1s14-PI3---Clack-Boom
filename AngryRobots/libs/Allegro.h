@@ -50,7 +50,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	int hpRobo = 100;
 	int nBexigas = 25;
 	int *coordenadas = malloc(2*sizeof(int));
-	// ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
+	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
 	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
 	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
 	// ALLEGRO_COLOR bexiga = al_map_rgb(255,0,255);
@@ -93,9 +93,10 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			al_draw_bitmap(powerBar, power, 60, 0);
 			power+=30;
 		}
+		al_draw_textf(Comics,blue, LARGURA/2, ALTURA/2, 0, "%d", nBexigas);
+
 		ciclos++;
 		camera_atualiza(cam);
-		histograma(cam);
 		int MovDetected = Centroid(cam, coordenadas);
 		al_draw_bitmap(robot, aux_x, aux_y, 0);
 		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);

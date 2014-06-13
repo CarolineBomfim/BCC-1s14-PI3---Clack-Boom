@@ -90,9 +90,24 @@ void RGB2HSV(int red, int green, int blue, int *h, int *s, int *v){
 	*s = variacaoCor/cMax * 100;	
 	*v = cMax * 100;
 }
+
+void histograma(int *h, int *s, int *v){
+	if((*h > 226 && *h < 250) && *s > 85 && *v > 85){
+		*h = 250;
+		*s = 100;
+		*v = 100;
+	}
+	else{
+		*h = 0;
+		*s = 0;
+		*v = 0;
+	}
+}
+
 /*
  * @param *cam é o ponteiro com a largura, altura e a informação da cor por pixel do quadro.
- * @param *coordenada
+ * @param *coordenada contem o ponto em x e y 
+ * A função 
  */
 
 int Centroid(camera *cam, int *coordenada){
@@ -111,8 +126,8 @@ int Centroid(camera *cam, int *coordenada){
 				imagem[a][b][2],
 				&h, &s, &v
 			);
-
-			if((h > 226 && h < 250) && s > 85 && v == 100){
+			histograma(&h, &s, &v);
+			if(h == 250 && s == 100 && v == 100){
 				marky += a;
 				markx += b;
 				cn++;
