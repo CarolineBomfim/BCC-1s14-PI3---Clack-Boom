@@ -47,6 +47,7 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 	int *coordenadas = malloc(2*sizeof(int));
 	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
 	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
+	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
 	int ciclosStart = 0;
 	int ciclosSair = 0;
 	// ------------------------------------------------------------------------------------------//
@@ -77,7 +78,7 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 		int targetx = coordenadas[0];
 		
 
-		al_draw_text(Comics,green, (LARGURA/2),(ALTURA/2), 0, "Iniciar");
+		al_draw_text(Comics,blue, (LARGURA/2),(ALTURA/2), 0, "Iniciar");
 		al_draw_text(Comics,red, (LARGURA/2) + 100,(ALTURA/2), 0, "Sair");
 
 		if(targetx > (LARGURA/2)){

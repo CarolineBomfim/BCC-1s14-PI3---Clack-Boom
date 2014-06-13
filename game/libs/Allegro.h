@@ -161,7 +161,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			direcao_y = 1;
 			aux_y = DROBO; 	
 		}
-		if(ciclos == 80 && ){
+		if(ciclos == 80 ){
 			ciclos = 0;
 			rVelocidade+=5;
 		}
