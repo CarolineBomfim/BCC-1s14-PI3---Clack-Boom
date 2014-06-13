@@ -39,7 +39,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 	al_start_timer(temporizador);	
 
-	int DROBO = 60;
+	int DROBO = 30;
 	int ciclos = 0;
 	double rVelocidade = 5.0;
 	int aux_x = LARGURA/2;
