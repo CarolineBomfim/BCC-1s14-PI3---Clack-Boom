@@ -17,15 +17,15 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 	ArquivoLog("Registro de eventos!");
-	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 20, 0);
-	// ALLEGRO_SAMPLE *sample = al_load_sample("../res/song/dispara.wav");;
-	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/background.jpg");
-	ALLEGRO_BITMAP *bexiga = al_load_bitmap("../res/img/bexiga.png");
-	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
-	ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
-	ALLEGRO_BITMAP *target1 = al_load_bitmap("../res/img/target1.png");
-	ALLEGRO_BITMAP *hpBar = al_load_bitmap("../res/img/hpBar.png");
-	ALLEGRO_BITMAP *powerBar = al_load_bitmap("../res/img/powerBar.png");
+	ALLEGRO_FONT *Comics = al_load_font("res/fonts/comic.ttf", 20, 0);
+	// ALLEGRO_SAMPLE *sample = al_load_sample("res/song/dispara.wav");;
+	ALLEGRO_BITMAP *background = al_load_bitmap("res/img/background.jpg");
+	ALLEGRO_BITMAP *bexiga = al_load_bitmap("res/img/bexiga.png");
+	ALLEGRO_BITMAP *robot = al_load_bitmap("res/img/robot.png");
+	ALLEGRO_BITMAP *target = al_load_bitmap("res/img/target.png");
+	ALLEGRO_BITMAP *target1 = al_load_bitmap("res/img/target1.png");
+	ALLEGRO_BITMAP *hpBar = al_load_bitmap("res/img/hpBar.png");
+	ALLEGRO_BITMAP *powerBar = al_load_bitmap("res/img/powerBar.png");
 
 
 	if(/*!background || !bomb ||*/ !bexiga || !robot || !target || !target1){

@@ -26,11 +26,11 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 	ArquivoLog("Registro de eventos!");
-	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 35, 0);
-	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/background.jpg");
+	ALLEGRO_FONT *Comics = al_load_font("res/fonts/comic.ttf", 35, 0);
+	ALLEGRO_BITMAP *background = al_load_bitmap("res/img/background.jpg");
 
-	ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
-	ALLEGRO_BITMAP *target1 = al_load_bitmap("../res/img/target1.png");
+	ALLEGRO_BITMAP *target = al_load_bitmap("res/img/target.png");
+	ALLEGRO_BITMAP *target1 = al_load_bitmap("res/img/target1.png");
 
 	if(!background ||/* !bomb || !bexiga || !robot ||*/ !target || !target1){
 		erro("Falha ao carregar bitmap.");
