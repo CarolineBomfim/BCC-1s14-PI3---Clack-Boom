@@ -97,7 +97,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			al_draw_bitmap(powerBar, power, 60, 0);
 			power+=30;
 		}
-		al_draw_textf(Comics,blue, LARGURA/2, ALTURA/2, 0, "%d", nBexigas);
+		al_draw_textf(Comics,blue, 30, 100, 0, "%d", nBexigas);
 
 		ciclos++;
 		camera_atualiza(cam);
@@ -161,12 +161,12 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			direcao_y = 1;
 			aux_y = DROBO; 	
 		}
-		if(ciclos == 80){
+		if(ciclos == 80 && ){
 			ciclos = 0;
 			rVelocidade+=5;
 		}
 		if(rVelocidade == 50){
-			break;
+			rVelocidade = 35;
 		}
 		if(aux_y == -1){
 			aux_y++;
