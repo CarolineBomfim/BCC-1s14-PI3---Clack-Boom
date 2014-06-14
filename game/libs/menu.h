@@ -26,11 +26,11 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 	ArquivoLog("Registro de eventos!");
-	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 35, 0);
-	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/background.jpg");
+	ALLEGRO_FONT *Comics = al_load_font("res/fonts/comic.ttf", 20, 0);
+	ALLEGRO_BITMAP *background = al_load_bitmap("res/img/background.jpg");
 
-	ALLEGRO_BITMAP *target = al_load_bitmap("../res/img/target.png");
-	ALLEGRO_BITMAP *target1 = al_load_bitmap("../res/img/target1.png");
+	ALLEGRO_BITMAP *target = al_load_bitmap("res/img/target.png");
+	ALLEGRO_BITMAP *target1 = al_load_bitmap("res/img/target1.png");
 
 	if(!background ||/* !bomb || !bexiga || !robot ||*/ !target || !target1){
 		erro("Falha ao carregar bitmap.");
@@ -47,7 +47,9 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 	int *coordenadas = malloc(2*sizeof(int));
 	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
 	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
-
+	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
+	int ciclosStart = 0;
+	int ciclosSair = 0;
 	// ------------------------------------------------------------------------------------------//
 	int finalizar = 0;
 	while(1){
@@ -76,22 +78,26 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 		int targetx = coordenadas[0];
 		
 
-		al_draw_text(Comics,green, (LARGURA/2) - 300,(ALTURA/2), 0, "Iniciar");
-		al_draw_text(Comics,red, (LARGURA/2) + 300,(ALTURA/2), 0, "Sair");
+		al_draw_text(Comics,blue, (LARGURA/2),(ALTURA/2), 0, "Iniciar");
+		al_draw_text(Comics,red, (LARGURA/2) + 100,(ALTURA/2), 0, "Sair");
 
-		if(targetx < (LARGURA/2) + 100){
+		if(targetx > (LARGURA/2)){
 			al_draw_bitmap(target1, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 			decisao = 0;
-			if(MovDetected == 1){
-				break;
+			if(MovDetected == 1 && ciclosStart == 30){
+				return 1;
 			}
+				ciclosStart++;
+				ciclosSair = 0;
 		}
-		else if(targetx < (LARGURA/2) - 100){
+		else if(targetx < (LARGURA/2)){
 			al_draw_bitmap(target1, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 			decisao = 1;
-			if(MovDetected == 1){
-				break;
+			if(MovDetected == 1 && ciclosSair == 30){
+				return 0;
 			}
+				ciclosSair++;
+				ciclosStart = 0;
 		}
 		al_flip_display();
 	}
