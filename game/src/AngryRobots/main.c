@@ -5,14 +5,14 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include "../../libs/camera.h"
 #include "../../libs/ArquivoLog.h"
 #include "../../libs/start.h"
-#include "../../libs/histograma.h"
 #include "../../libs/define.h"
 #include "../../libs/Aleatorio.h"
-#include "../../libs/ConvexHull.h"
 #include "../../libs/Centroide.h"
 #include "../../libs/Allegro.h"
 #include "../../libs/menu.h"
@@ -25,6 +25,13 @@ int main(){
 	ALLEGRO_DISPLAY *display = al_create_display(cam->largura, cam->altura);
 	int finaliza = 0;
 	int tentativas = 0;
+	ALLEGRO_AUDIO_STREAM *musica = NULL;
+	musica = al_load_audio_stream("../../res/song/mus.ogg", 4, 1024);
+	if(!musica){
+		erro("Falha ao carregar musica.");
+	}
+	al_attach_audio_stream_to_mixer(musica, al_get_default_mixer());
+	al_set_audio_stream_playing(musica, true);
 	while(1){
 		if(finaliza == 0){
 			finaliza = Menu(cam, display, tentativas);
@@ -44,6 +51,8 @@ int main(){
 		}
 		tentativas++;
 	}
+	al_destroy_audio_stream(musica);
+ 
 	camera_finaliza(cam);
 	al_destroy_display(display);
 	EndGame();

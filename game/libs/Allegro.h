@@ -2,7 +2,7 @@
 #define _ALLEGRO_H_
 
 int Allegro(camera *cam, ALLEGRO_DISPLAY *display){	
-	
+    
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
 
@@ -18,6 +18,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
 	ArquivoLog("Registro de eventos!");
 	ALLEGRO_FONT *Comics = al_load_font("../res/fonts/comic.ttf", 20, 0);
+	// ALLEGRO_SAMPLE *sample = al_load_sample("../res/song/dispara.wav");;
 	ALLEGRO_BITMAP *background = al_load_bitmap("../res/img/background.jpg");
 	ALLEGRO_BITMAP *bexiga = al_load_bitmap("../res/img/bexiga.png");
 	ALLEGRO_BITMAP *robot = al_load_bitmap("../res/img/robot.png");
@@ -30,6 +31,9 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	if(/*!background || !bomb ||*/ !bexiga || !robot || !target || !target1){
 		erro("Falha ao carregar bitmap.");
 	}
+	// if(!sample){
+	// 	erro("Falha ao carregar audio.");
+	// }
 	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
 
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
@@ -39,7 +43,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 	al_start_timer(temporizador);	
 
-	int DROBO = 60;
+	int DROBO = 30;
 	int ciclos = 0;
 	double rVelocidade = 5.0;
 	int aux_x = LARGURA/2;
@@ -50,7 +54,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	int hpRobo = 100;
 	int nBexigas = 25;
 	int *coordenadas = malloc(2*sizeof(int));
-	// ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
+	ALLEGRO_COLOR blue = al_map_rgb(0,0,255);
 	ALLEGRO_COLOR green = al_map_rgb(0,255,0);
 	ALLEGRO_COLOR red = al_map_rgb(255,0,0);
 	// ALLEGRO_COLOR bexiga = al_map_rgb(255,0,255);
@@ -93,9 +97,10 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			al_draw_bitmap(powerBar, power, 60, 0);
 			power+=30;
 		}
+		al_draw_textf(Comics,blue, LARGURA/2, ALTURA/2, 0, "%d", nBexigas);
+
 		ciclos++;
 		camera_atualiza(cam);
-		histograma(cam);
 		int MovDetected = Centroid(cam, coordenadas);
 		al_draw_bitmap(robot, aux_x, aux_y, 0);
 		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
@@ -109,10 +114,12 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 					hpRobo-=5;
 					al_draw_text(Comics,green, LARGURA/2, ALTURA/2, 0, "Acertou!");
 					uPower = 0;
+					// al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 				}
 				else{
 					uPower = 0;
 					al_draw_text(Comics,red, LARGURA/2, ALTURA/2, 0, "Errou!");
+					// al_play_sample(sample, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 				}
 			}
 		}
@@ -187,6 +194,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	al_destroy_bitmap(robot);
 	al_destroy_bitmap(target);
 	al_destroy_bitmap(target1);
+	// al_destroy_sample(sample);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	
