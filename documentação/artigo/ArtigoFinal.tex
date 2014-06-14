@@ -45,13 +45,12 @@ Gran Slam Tennis 2, jogo que simula os grandes campeonatos de tênis, foi utiliz
 Os algorítimos desenvolvidos são autorais sem base em outros jogos, visto que mesmo com fundamento em tantos jogos, Angry Robots é um diferencial.
 
 \section*{Desenvolvimento}
-
-\textbf{Histograma}:
-Um histograma, conhecido também como distribuição de frequências. Aplicado no código para captar os tons de azul, onde todos os valores abaixo da media automaticamente serão zerados e os maiores maximizados, para que se encaixem no tom rastreado, calculando assim o centro.
-\\ \\ \\ \textbf{Centróide}:
-É o ponto interior que define seu centro geométrico, caso a forma geométrica represente uma secção homogênea de um corpo, então o centroide coincide com o centro de massa. A mesma foi implementada no Angry Robots para captar o meio da tela, facilitando a detecção e visualização do restante do display para uma variação é identificação da cor de preferência, no caso o azul. 
-\\ \\ \textbf{Conversão para HSV}: 
+\textbf{Centróide}:
+É o ponto interior que define seu centro geométrico, caso a forma geométrica represente uma secção homogênea de um corpo, então o centroide coincide com o centro de massa. A mesma foi implementada no Angry Robots para captar o meio da tela, facilitando a detecção e visualização do restante do display para uma variação é identificação do laser azul. 
+\\ \\ \\ \textbf{Conversão para HSV}: 
 Calcula a intensidade da tonalidade, saturação e brilho da imagem, possibilitando aprimoramento no rastreamento do código, para resolver problemas com a iluminação do local, assim, não atrapalha a jogabilidade. A tonalidade permite distinguir as cores puras de 0 á 360 graus, a saturação verifica a intensidade da pureza da tonalidade, o brilho verifica a iluminação da imagem. 
+\\ \\ \textbf{Histograma}:
+Um histograma, conhecido também como distribuição de frequências. Aplicado no código para captar os tons de azul, onde todos os valores abaixo da media automaticamente serão zerados e os maiores maximizados, para que se encaixem no tom rastreado, calculando assim o centro.
 
 \begin{figure}[!htb]
 \centering
@@ -61,8 +60,7 @@ Calcula a intensidade da tonalidade, saturação e brilho da imagem, possibilita
 
 \section*{Resultados}
 
-Neste jogo o robô ira tentar fugir para que o jogador não consiga acerta-lo com pequenas bolas, 
-isto será feito através de um laser azul, o objetivo do jogo é derrotar o robô jogando as bolas em sua direção, quanto mais rápido os movimentos do usuário, mais chances de vencer o jogo.
+Neste jogo o robô tentará fugir para que o jogador não consiga acertá-lo com pequenas bolas de água, isto será feito através de um laser azul, o objetivo do jogo é derrotar o robô jogando as bexigas em sua direção, quanto mais rápido os movimentos do usuário, mais chances de vencer o jogo.
 
 \begin{figure}[!htb]
 \centering
@@ -80,15 +78,25 @@ isto será feito através de um laser azul, o objetivo do jogo é derrotar o rob
 
 \section*{Considerações Finais}
 
-O rastreamento é o ponto mais difícil, pois alguns fatores atrapalharam o desenvolvimento do mesmo, um deles foi a iluminação, pois devido a ela, a imagem pode ser ofuscada ou obscurecida demais, porém o HSV permitiu que a iluminação fosse ignorada, pois este algoritmo converte toda a imagem para cinza, e trata a variação da luminosidade, deste modo o usuário poderá jogar com uma camiseta azul por exemplo, sem afetar o rastreamento.
+O rastreamento é o ponto mais difícil, visto que alguns fatores atrapalharam o desenvolvimento do mesmo, um deles foi a iluminação, pois a imagem pode ser ofuscada ou obscurecida devido a diferentes ambientes, entretanto o HSV permitiu que a iluminação fosse ignorada. Este algoritmo converte toda a imagem para cinza, e trata a variação da luminosidade, deste modo o usuário poderá jogar com uma camiseta azul por exemplo, sem afetar o rastreamento.
+
 
 \begin{thebibliography}{6}
+
 \bibitem *http://labdegaragem.com/profiles/blog/list?tag=rob\%C3\%B3tica \\
-\bibitem *http://labdegaragem.com/profiles/blog/list?tag=rob\%C3\%B4 \\
+\newblock Blog Laboratório Garagem
+
 \bibitem *http://www.techtudo.com.br/noticias/noticia/2012/02/top-10-jogos-com-robos-gigantes.html \\
+\newblock Techtudo pesquisa sobre os jogos marcantes com robôs.
+
 \bibitem *http://www.di.ubi.pt/~agomes/cg/teoricas/06-iluminacao.pdf \\
+\newblock Capítulo Iluminação - Engenharia Informática
+
 \bibitem *http://sidigicor.blogspot.com.br/2011/02/modelo-hsv.html \\
-\bibitem *http://www.ufrgs.br/engcart/PDASR/formcor.html
+\newblok Explicação do Sistema de Cores HSV
+
+\bibitem *http://www.ufrgs.br/engcart/PDASR/formcor.html \\
+\newblock Ampla explicação do Sistema de Cores HSV
 
 \end{thebibliography}
 
