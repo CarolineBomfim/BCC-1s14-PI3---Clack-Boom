@@ -9,6 +9,9 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include "../../libs/camera.h"
+#include "../../libs/status_bar.h"
+#include "../../libs/targets.h"
+#include "../../libs/characters.h"
 #include "../../libs/ArquivoLog.h"
 #include "../../libs/start.h"
 #include "../../libs/define.h"
@@ -17,13 +20,16 @@
 #include "../../libs/Allegro.h"
 #include "../../libs/menu.h"
 
+#define TRUE 1
+#define FALSE 0
+
 int main(){
 	//Iniciando
 	StartGame();
 	ArquivoLog("Jogo Iniciado!");
 	camera *cam = camera_inicializa(0);
 	ALLEGRO_DISPLAY *display = al_create_display(cam->largura, cam->altura);
-	int finaliza = 0;
+	int finaliza = 1;
 	int tentativas = 0;
 	// ALLEGRO_AUDIO_STREAM *musica = NULL;
 	// // musica = al_load_audio_stream("../res/song/mus.ogg", 4, 1024);
