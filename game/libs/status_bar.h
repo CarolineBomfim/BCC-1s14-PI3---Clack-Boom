@@ -9,39 +9,13 @@ typedef struct _barstatus {
 }barstatus;
 
 //Constructor
-barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *barimage) {
-	barstatus newbarstatus;
-	newbarstatus.total = allcapacity;
-	newbarstatus.atual = starting;
-	newbarstatus.positiony = position;
-	newbarstatus.image = barimage;
-	return newbarstatus;
-}
+barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *barimage);
 
-void drawStatusBar(barstatus bar) {
-	int status = 0;
-	if(bar.total == bar.atual){
-		break;
-	} else if (bar.total > bar.atual) {
-		while(TRUE) {
-			if(status < bar.atual) {
-				al_draw_bitmap(bar.image, status, bar.positiony, 0);
-				status += status;
-			} else {
-				break;
-			}
-		}
-	}
-	return;
-}
+void drawStatusBar(barstatus bar);
 
-void reduceBar(barstatus bar, int reduced) {
-	bar.atual -= reduced;
-}
+void reduceBar(barstatus bar, int reduced);
 
-void updateBar(barstatus bar, int up) {
-	bar.atual += up;
-}
+void updateBar(barstatus bar, int up);
 
 
 #endif

@@ -14,7 +14,6 @@
 #include "../../libs/characters.h"
 #include "../../libs/ArquivoLog.h"
 #include "../../libs/start.h"
-#include "../../libs/define.h"
 #include "../../libs/Aleatorio.h"
 #include "../../libs/Centroide.h"
 #include "../../libs/Allegro.h"

@@ -1,20 +1,8 @@
 #ifndef _ALEATORIO_H_
 #define _ALEATORIO_H_
 
-void Coordenadas(int *coordenada){
-	int divisor = 20;
-	int x = (int)rand() % divisor;
-	int y = (int)rand() % divisor;
-	if(x <= 0){
-		x = 1;
-	}
-	if(y <= 0){
-		y = 1;
-	}
-	coordenada[0] = x;
-	coordenada[1] = y;
-}
+void Coordenadas(int *coordenada);
 
-int Bomb(){return ((int)rand()%20);}
+int Bomb();
 
 #endif

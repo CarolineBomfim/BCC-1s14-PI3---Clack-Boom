@@ -1,5 +1,5 @@
 CC = gcc 
-CFLAGS = -std=c99 -W -Wall -pedantic
+CFLAGS = -std=c99 -W -Wall -pedantic 
 EXEC = AngryRobots
 MAIN = src/AngryRobots/main.c
 LIB = libs/*.c

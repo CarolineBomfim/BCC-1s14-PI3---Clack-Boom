@@ -13,45 +13,18 @@ typedef struct _character {
 }character;
 
 //Constructor
-character newCharacter(ALLEGRO_BITMAP *img, int life) {
-	character charact;
-	
-	charact.hp				= life;
-	charact.image 		= img;
-	charact.width 		= img->w;
-	charact.height 		= img->h;
-	charact.speed 		= 1;
-	charact.direction = 1;
-	charact.positionx = 0;
-	charact.positiony = 0;
+character newCharacter(ALLEGRO_BITMAP *img, int life);
 
-	return charact;
-}
+void drawCharacter(character isIt, int y, int x);
 
-void drawCharacter(character isIt, int y, int x) {
-	setPositionCharacter(isIt, y, x,);
-	al_draw_bitmap(isIt.image, isIt.positionx, isIt.positiony, 0);
-}
+void speedCharacterUp(character isIt, int newSpeed);
 
-void speedCharacterUp(character isIt, int newSpeed) {
-	isIt.speed += newSpeed;
-}
+void speedCharacterDown(character isIt, int newSpeed);
 
-void speedCharacterDown(character isIt, int newSpeed) {
-	isIt.speed -= newSpeed;
-}
+void setPositionCharacter(character isIt, int y, int x);
 
-void setPositionCharacter(character isIt, int y, int x) {
-	isIt.positionx = x - isIt.width;
-	isIt.positiony = y - isIt.height;
-}
+void hpCharacterUp(character isIt, int newHp);
 
-void hpCharacterUp(character isIt, int newHp) {
-	isIt.hp += newHp;
-}
-
-void hpCharacterDown(character isIt, int newHp) {
-	isIt.hp -= newHp;
-}
+void hpCharacterDown(character isIt, int newHp);
 
 #endif

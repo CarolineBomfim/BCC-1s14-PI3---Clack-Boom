@@ -25,4 +25,5 @@ void erro(char *msg){
 	ArquivoLog(msg);
 	exit(EXIT_FAILURE);
 }
+
 #endif
