@@ -9,7 +9,9 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include "camera.h"
+#include "Centroide.h"
 #include "menu.h"
+#include "ArquivoLog.h"
 
 
 #define FPS 180.0
