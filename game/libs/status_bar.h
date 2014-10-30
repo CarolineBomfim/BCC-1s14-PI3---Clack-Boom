@@ -1,11 +1,12 @@
 #ifndef _STATUS_BAR_H_
 #define _STATUS_BAR_H_
+#include "images.h"
 
 typedef struct _barstatus {
 	int total;
 	int atual;
 	int positiony;
-	ALLEGRO_BITMAP *image;
+	image imagem;
 }barstatus;
 
 //Constructor
@@ -17,5 +18,6 @@ void reduceBar(barstatus bar, int reduced);
 
 void updateBar(barstatus bar, int up);
 
+void setBarPosition(barstatus it, int x, int y);
 
 #endif

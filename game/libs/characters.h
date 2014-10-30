@@ -1,15 +1,13 @@
 #ifndef _CHARACTERS_H_
 #define _CHARACTERS_H_
+#include "images.h"
+
 
 typedef struct _character {
 	int hp;
-	int width;
-	int height;
+	image imagem;
 	int speed;
 	int direction;
-	int positionx;
-	int positiony;
-	ALLEGRO_BITMAP *image;
 }character;
 
 //Constructor

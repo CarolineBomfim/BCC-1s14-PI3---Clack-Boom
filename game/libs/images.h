@@ -9,9 +9,9 @@ typedef struct _image{
 	int positiony;
 }image;
 
-int getWidth(ALLEGRO_BITMAP img);
+int getWidth(ALLEGRO_BITMAP *img);
 
-int getHeight(ALLEGRO_BITMAP img);
+int getHeight(ALLEGRO_BITMAP *img);
 
 int getPositionx(image img);
 
