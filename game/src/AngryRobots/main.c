@@ -30,34 +30,7 @@ int main(){
 	ALLEGRO_DISPLAY *display = al_create_display(cam->largura, cam->altura);
 	int finaliza = 1;
 	int tentativas = 0;
-	// ALLEGRO_AUDIO_STREAM *musica = NULL;
-	// // musica = al_load_audio_stream("../res/song/mus.ogg", 4, 1024);
-	// if(!musica){
-	// 	erro("Falha ao carregar musica.");
-	// }
-	// al_attach_audio_stream_to_mixer(musica, al_get_default_mixer());
-	// al_set_audio_stream_playing(musica, true);
-	while(1){
-		if(finaliza == 0){
-			finaliza = Menu(cam, display, tentativas);
-		}
-		if(finaliza == 1){
-			break;
-		}
-		else{
-			finaliza = Allegro(cam, display);
-			if(finaliza == 1){
-				break;
-			}
-			else if(finaliza == 2){
-				Congratulation(cam, display);
-				tentativas = 0;
-			}			
-		}
-		tentativas++;
-	}
-	// al_destroy_audio_stream(musica);
- 
+	finaliza = Allegro(cam, display);
 	camera_finaliza(cam);
 	al_destroy_display(display);
 	EndGame();

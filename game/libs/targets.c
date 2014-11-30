@@ -11,8 +11,11 @@ target newTarget(ALLEGRO_BITMAP *img) {
 	return targetNew;
 }
 
-void drawTarget(target select, int x, int y) {
-	setPositionTarget(select, x, y);
+void clearTarget(target this) {
+	clearImage(this.imagem);
+}
+
+void drawTarget(target select) {
 	draw(select.imagem);
 }
 

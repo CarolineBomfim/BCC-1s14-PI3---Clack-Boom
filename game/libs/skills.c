@@ -12,12 +12,16 @@ skill newSkill(ALLEGRO_BITMAP *img, int p, int c) {
 	return nSkill;
 }
 
+void clearSkill(skill this) {
+	clearImage(this.image);
+}
+
 void drawSkill(skill itIs, int x, int y){
 	setPositionSkill(itIs, x, y);
 	draw(itIs.image);
 }
 
 void setPositionSkill(skill select, int x, int y){
-	setPositionx(select.image, x - select.image.positionx);
-	setPositiony(select.image, y - select.image.positiony);
+	setPositionx(select.image, x - getPositionx(select.image));
+	setPositiony(select.image, y - getPositiony(select.image));
 }

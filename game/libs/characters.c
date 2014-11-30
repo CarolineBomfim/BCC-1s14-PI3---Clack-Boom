@@ -13,28 +13,32 @@ character newCharacter(ALLEGRO_BITMAP *img, int life) {
 	return charact;
 }
 
-void drawCharacter(character isIt, int y, int x) {
-	setPositionCharacter(isIt, y, x);
-	draw(isIt.imagem);
+void clearCharacter(character this){
+	clearImage(this.imagem);
 }
 
-void speedCharacterUp(character isIt, int newSpeed) {
-	isIt.speed += newSpeed;
+void drawCharacter(character this, int y, int x) {
+	setPositionCharacter(this, y, x);
+	draw(this.imagem);
 }
 
-void speedCharacterDown(character isIt, int newSpeed) {
-	isIt.speed -= newSpeed;
+void speedCharacterUp(character this, int newSpeed) {
+	this.speed += newSpeed;
 }
 
-void setPositionCharacter(character isIt, int y, int x) {
-	setPositionx(isIt.imagem, x - isIt.imagem.width );
-	setPositiony(isIt.imagem,  y - isIt.imagem.height);
+void speedCharacterDown(character this, int newSpeed) {
+	this.speed -= newSpeed;
 }
 
-void hpCharacterUp(character isIt, int newHp) {
-	isIt.hp += newHp;
+void setPositionCharacter(character this, int y, int x) {
+	setPositionx(this.imagem, x - this.imagem.width );
+	setPositiony(this.imagem,  y - this.imagem.height);
 }
 
-void hpCharacterDown(character isIt, int newHp) {
-	isIt.hp -= newHp;
+void hpCharacterUp(character this, int newHp) {
+	this.hp += newHp;
+}
+
+void hpCharacterDown(character this, int newHp) {
+	this.hp -= newHp;
 }

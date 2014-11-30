@@ -13,16 +13,18 @@ typedef struct _character {
 //Constructor
 character newCharacter(ALLEGRO_BITMAP *img, int life);
 
-void drawCharacter(character isIt, int y, int x);
+void clearCharacter(character this);
 
-void speedCharacterUp(character isIt, int newSpeed);
+void drawCharacter(character this, int y, int x);
 
-void speedCharacterDown(character isIt, int newSpeed);
+void speedCharacterUp(character this, int newSpeed);
 
-void setPositionCharacter(character isIt, int y, int x);
+void speedCharacterDown(character this, int newSpeed);
 
-void hpCharacterUp(character isIt, int newHp);
+void setPositionCharacter(character this, int y, int x);
 
-void hpCharacterDown(character isIt, int newHp);
+void hpCharacterUp(character this, int newHp);
+
+void hpCharacterDown(character this, int newHp);
 
 #endif

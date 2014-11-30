@@ -10,7 +10,10 @@ typedef struct _skill{
 //Constructor
 skill newSkill(ALLEGRO_BITMAP *img, int p, int c);
 
+void clearSkill(skill this);
+
 void drawSkill(skill itIs, int x, int y);
 
 void setPositionSkill(skill select, int x, int y);
+
 #endif

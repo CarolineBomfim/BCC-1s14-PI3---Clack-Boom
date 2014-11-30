@@ -1,13 +1,17 @@
-CC = gcc 
-CFLAGS = -std=c99 -W -Wall -pedantic 
+CC = gcc
+CFLAGS = -std=c99 -W
 EXEC = AngryRobots
 MAIN = src/AngryRobots/main.c
-LIB = libs/(wildcard %.c)
-FLAGS = -lallegro -lallegro_color -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf -lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_calib3d -lopencv_video -lopencv_features2d -lopencv_ml -lopencv_objdetect -lopencv_contrib -lopencv_legacy -lm
+LIB = libs/*.c
+OBJ = *.o
+FLAGS = -lallegro -lallegro_color -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf\
+				-lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui\
+ 				-lopencv_imgproc -lopencv_calib3d -lopencv_video -lopencv_features2d -lopencv_ml\
+ 				-lopencv_objdetect -lopencv_contrib -lopencv_legacy -lm
 
 all: $(EXEC)
 
-OBJ: $(LIB) $(MAIN)
+$(OBJ): $(LIB) $(MAIN)
 	$(CC) $(CFLAGS) $^ -c
 
 $(EXEC): $(OBJ)
@@ -16,4 +20,4 @@ $(EXEC): $(OBJ)
 .PHONY: clean
 
 clean:
-	rm -r $(OBJ)
+	rm -rf $(OBJ)

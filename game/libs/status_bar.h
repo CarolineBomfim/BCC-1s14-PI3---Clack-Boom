@@ -12,6 +12,8 @@ typedef struct _barstatus {
 //Constructor
 barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *barimage);
 
+void clearBar(barstatus this);
+
 void drawStatusBar(barstatus bar);
 
 void reduceBar(barstatus bar, int reduced);

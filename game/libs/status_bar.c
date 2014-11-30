@@ -12,8 +12,13 @@ barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *ba
 	newbarstatus.total = allcapacity;
 	newbarstatus.atual = starting;
 	newbarstatus.imagem = newImage(barimage);
-	newbarstatus.imagem.positiony = position;
+	setPositiony(newbarstatus.imagem, position);
+	setPositionx(newbarstatus.imagem, starting);
 	return newbarstatus;
+}
+
+void clearBar(barstatus this){
+	clearImage(this.imagem);
 }
 
 void drawStatusBar(barstatus bar) {
@@ -23,7 +28,7 @@ void drawStatusBar(barstatus bar) {
 	} else if (bar.total > bar.atual) {
 		while(TRUE) {
 			if(status < bar.atual) {
-				setBarPosition( bar, status, bar.imagem.positiony );
+				setBarPosition( bar, status, getPositiony(bar.imagem));
 				draw(bar.imagem);
 				status += status;
 			} else {

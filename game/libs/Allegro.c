@@ -109,59 +109,22 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			return 1;
 		}
 
-		al_draw_bitmap(background, 0, 0, 0);
+		camera_atualiza(cam);
+		int MovDetected = Centroid(cam, coordenadas);
+		if(MovDetected){
+			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
+			fprintf(stderr, "%s %d %d\n", "info->target,", getPositionx(targetSimple.imagem), 
+			getPositiony(targetSimple.imagem));
+		}
+		
+
+		camera_copia(cam, cam->quadro, esquerda);
 		drawStatusBar(hp);
 		drawStatusBar(power);
-		
-		camera_atualiza(cam);
-
-		int MovDetected = Centroid(cam, coordenadas);
-
-		drawTarget(targetSimple, coordenadas[0], coordenadas[1]);
-		
-		if(bexiga.capacity > 0 && MovDetected == 1){
-			if(bexiga.power == 100){
-				drawSkill(bexiga, coordenadas[0], coordenadas[1]);
-				bexiga.capacity--;
-				if((coordenadas[0] < aux_x + 30 && coordenadas[0] > aux_x - 30) 
-				   	&& (coordenadas[1] < aux_y + 30 && coordenadas[1] > aux_y - 30)) {
-					robot.hp -=5;
-				}
-				else{
-					bexiga.power = 0;
-				}
-			}
-		}
-
-		if(bexiga.capacity == 0){
-			ArquivoLog("Acabou as bexigas!");
-			break;
-		}
-
-		if(coordenadas[0] < aux_x + 50 && coordenadas[0] > aux_x - 50 
-		   	&& coordenadas[1] < aux_y + 50 && coordenadas[1] > aux_y - 50) {
-			drawTarget(targetSelected, coordenadas[0], coordenadas[1]);
-		}
-
+		drawTarget(targetSimple);
 		al_flip_display();
 		al_clear_to_color(reset);
 
-		if(aux_x >= LARGURA){
-			aux_x -= 10;
-		}
-
-		if(aux_y >= ALTURA){
-			aux_y -= 10; 
-
-		}
-
-		aux_x += robot.speed * robot.direction;
-		aux_y += robot.speed * robot.direction;
-		
-		if(robot.hp <= 1){
-			return 2;
-		}
-		ciclos++;
 	}
 
 	free(coordenadas);
@@ -173,7 +136,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	al_destroy_bitmap(robotImage);
 	al_destroy_bitmap(targetSimpleImg);
 	al_destroy_bitmap(targetSelectedI);
-	// al_destroy_sample(sample);
 	al_destroy_timer(temporizador);
 	al_destroy_event_queue(EventoQueue);
 	
