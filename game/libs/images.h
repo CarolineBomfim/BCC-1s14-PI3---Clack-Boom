@@ -7,6 +7,8 @@ typedef struct _image{
 	int height;
 	int *positionx;
 	int *positiony;
+	int screen_height;
+	int screen_width;
 }image;
 
 int getWidth(ALLEGRO_BITMAP *img);

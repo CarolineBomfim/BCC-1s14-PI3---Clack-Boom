@@ -23,20 +23,13 @@ void clearBar(barstatus this){
 
 void drawStatusBar(barstatus bar) {
 	int status = 0;
-	if(bar.total == bar.atual){
-		return;
-	} else if (bar.total > bar.atual) {
-		while(TRUE) {
-			if(status < bar.atual) {
-				setBarPosition( bar, status, getPositiony(bar.imagem));
-				draw(bar.imagem);
-				status += status;
-			} else {
-				break;
-			}
-		}
+	int aux = 0;
+	while(status < bar.atual) {
+		setPositionx(bar.imagem, aux);
+		draw(bar.imagem);
+		status++;
+		aux += bar.imagem.width;
 	}
-	return;
 }
 
 void reduceBar(barstatus bar, int reduced) {

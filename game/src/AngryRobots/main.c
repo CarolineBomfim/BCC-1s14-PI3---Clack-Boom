@@ -28,6 +28,11 @@ int main(){
 	ArquivoLog("Jogo Iniciado!");
 	camera *cam = camera_inicializa(0);
 	ALLEGRO_DISPLAY *display = al_create_display(cam->largura, cam->altura);
+	int info[2] = {cam->largura, cam->altura};
+	saveInfo(info);
+	char informations[50];
+	sprintf(informations, "Display height: %d widht: %d", cam->altura, cam->largura);
+	ArquivoLog(informations);
 	int finaliza = 1;
 	int tentativas = 0;
 	finaliza = Allegro(cam, display);

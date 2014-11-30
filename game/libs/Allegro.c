@@ -8,12 +8,12 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
+#include "ArquivoLog.h"
 #include "camera.h"
 #include "images.h"
 #include "status_bar.h"
 #include "targets.h"
 #include "characters.h"
-#include "ArquivoLog.h"
 #include "start.h"
 #include "Aleatorio.h"
 #include "Centroide.h"
@@ -22,6 +22,7 @@
 #define TRUE 1
 #define FALSE 0
 #define FPS 180.0
+
 int Allegro(camera *cam, ALLEGRO_DISPLAY *display){	
     
 	int LARGURA = cam->largura;
@@ -102,7 +103,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 			default:
 				break;
-
 		}
 
 		if(finalizar == 1){
@@ -111,23 +111,25 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 		camera_atualiza(cam);
 		int MovDetected = Centroid(cam, coordenadas);
+
 		if(MovDetected){
 			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
-			fprintf(stderr, "%s %d %d\n", "info->target,", getPositionx(targetSimple.imagem), 
-			getPositiony(targetSimple.imagem));
 		}
-		
-
 		camera_copia(cam, cam->quadro, esquerda);
 		drawStatusBar(hp);
 		drawStatusBar(power);
 		drawTarget(targetSimple);
 		al_flip_display();
 		al_clear_to_color(reset);
-
 	}
 
 	free(coordenadas);
+	clearSkill(bexiga);
+	clearCharacter(robot);
+	clearTarget(targetSimple);
+	clearTarget(targetSelected);
+	clearBar(hp);
+	clearBar(power);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);

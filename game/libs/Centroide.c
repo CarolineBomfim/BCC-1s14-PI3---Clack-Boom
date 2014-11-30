@@ -1,5 +1,10 @@
 #include <stdlib.h>
 #include "camera.h"
+
+#define TRUE 1
+#define FALSE 0
+#define HSV ((h < 50 && s > 75 && v > 75) ? TRUE : FALSE) 
+
 /**
 * @param red
 * @param green
@@ -112,7 +117,7 @@ int Centroid(camera *cam, int *coordenada){
 				imagem[a][b][2],
 				&h, &s, &v
 			);
-			if(h > 200 && s > 75 && v > 75){
+			if(HSV){
 				marky += a;
 				markx += b;
 				cn++;

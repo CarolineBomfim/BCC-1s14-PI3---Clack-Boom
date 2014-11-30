@@ -14,7 +14,7 @@ void ArquivoLog(char *msg) {
 	int minuto = t->tm_min;
 	int segundo = t->tm_sec;
 
-	ArquivoLog = fopen("LogInterno.txt", "a");
+	ArquivoLog = fopen("LogInterno.log", "a");
 		
 		fprintf(ArquivoLog, "%d:%d:%d %d/%d/%d - \"%s\"\n", hora, minuto, segundo, dia, mes, ano, msg);
 		fprintf(ArquivoLog, "--\n");
@@ -26,4 +26,28 @@ void erro(char *msg){
 	printf("%s\n", msg);
 	ArquivoLog(msg);
 	exit(EXIT_FAILURE);
+}
+
+void saveInfo(int *nInfo) {
+	FILE *Info;
+	int count = 0;
+	Info = fopen("info.tmp", "w");
+	while(count < 2) {
+		fprintf(Info, "%d\n", nInfo[count]);
+		count++;
+	}
+	fclose(Info);
+}
+
+void getInfo( int *info, int max ) {
+	FILE *Info;
+	int aux;
+	int count = 0;
+	Info = fopen("info.tmp", "r");
+	while(count < max) {
+		fscanf(Info, "%d", &aux);
+		info[count] = aux;
+		count++;
+	}
+	fclose(Info);
 }

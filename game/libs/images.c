@@ -1,6 +1,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include "images.h"
+#include "ArquivoLog.h"
 
 int getWidth(ALLEGRO_BITMAP *img){
 	return al_get_bitmap_width(img);
@@ -27,7 +28,19 @@ int getPositiony(image img) {
 }
 
 void draw(image img) {
-	al_draw_bitmap(img.image, getPositionx(img),getPositiony(img), 0);
+	int x = 0, y = 0;
+	if(getPositionx(img) <= (img.screen_width - img.width)) {
+		x = getPositionx(img);
+	} else {
+		x = img.screen_width - img.width;
+	}
+
+	if(getPositiony(img) <= (img.screen_height - img.height)) {
+		y = getPositiony(img);
+	} else {
+		y = img.screen_height - img.height;
+	}
+	al_draw_bitmap(img.image, x, y, 0);
 }
 
 int *alocaPosition() {
@@ -53,5 +66,9 @@ image newImage(ALLEGRO_BITMAP *img) {
 	imagem.positionx = alocaPosition();
 	setPositionx(imagem, imagem.width);
 	setPositiony(imagem, imagem.height);
+	int info[2];
+	getInfo(info, 2);
+	imagem.screen_width = info[0];
+	imagem.screen_height = info[1];
 	return imagem;
 }
