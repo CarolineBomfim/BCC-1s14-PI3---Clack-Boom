@@ -22,6 +22,7 @@
 #define TRUE 1
 #define FALSE 0
 #define FPS 180.0
+
 int Allegro(camera *cam, ALLEGRO_DISPLAY *display){	
     
 	int LARGURA = cam->largura;
@@ -52,8 +53,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_BITMAP *barBlue 				= al_load_bitmap("res/img/powerBar.png");
 
 
-	if(/*!background || !bomb ||*/ !bexigaImage || !robotImage
-			|| !targetSimpleImg || !targetSelectedI){
+	if(!background || /**!bomb ||*/ !bexigaImage || !robotImage || !targetSimpleImg || !targetSelectedI) {
 		erro("Falha ao carregar bitmap.");
 	} else {
 		ArquivoLog("Bitmaps carregados com sucesso.");
@@ -69,8 +69,8 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_register_event_source(EventoQueue, al_get_display_event_source(display));
-
 	al_start_timer(temporizador);
+
 
 	int 						finalizar 					= 0;
 	int 						ciclos 							= 1;
@@ -90,7 +90,8 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_COLOR 	reset 							= al_map_rgb(0,0,0);
 	ALLEGRO_BITMAP 	*buffer 						= al_get_backbuffer(display);
 	ALLEGRO_BITMAP 	*esquerda						= al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
-
+	ALLEGRO_BITMAP 	*direita 						= al_create_sub_bitmap(buffer, LARGURA, 0, LARGURA, ALTURA);
+	unsigned char ***matriz 						= camera_aloca_matriz(cam);
 	while(TRUE){
 		ALLEGRO_EVENT evento;
 		al_wait_for_event(EventoQueue, &evento);
@@ -102,69 +103,16 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 			default:
 				break;
-
 		}
-
 		if(finalizar == 1){
 			return 1;
 		}
-
-		al_draw_bitmap(background, 0, 0, 0);
-		drawStatusBar(hp);
-		drawStatusBar(power);
-		
 		camera_atualiza(cam);
-
-		int MovDetected = Centroid(cam, coordenadas);
-
-		drawTarget(targetSimple, coordenadas[0], coordenadas[1]);
-		
-		if(bexiga.capacity > 0 && MovDetected == 1){
-			if(bexiga.power == 100){
-				drawSkill(bexiga, coordenadas[0], coordenadas[1]);
-				bexiga.capacity--;
-				if((coordenadas[0] < aux_x + 30 && coordenadas[0] > aux_x - 30) 
-				   	&& (coordenadas[1] < aux_y + 30 && coordenadas[1] > aux_y - 30)) {
-					robot.hp -=5;
-				}
-				else{
-					bexiga.power = 0;
-				}
-			}
-		}
-
-		if(bexiga.capacity == 0){
-			ArquivoLog("Acabou as bexigas!");
-			break;
-		}
-
-		if(coordenadas[0] < aux_x + 50 && coordenadas[0] > aux_x - 50 
-		   	&& coordenadas[1] < aux_y + 50 && coordenadas[1] > aux_y - 50) {
-			drawTarget(targetSelected, coordenadas[0], coordenadas[1]);
-		}
-
-		al_flip_display();
-		al_clear_to_color(reset);
-
-		if(aux_x >= LARGURA){
-			aux_x -= 10;
-		}
-
-		if(aux_y >= ALTURA){
-			aux_y -= 10; 
-
-		}
-
-		aux_x += robot.speed * robot.direction;
-		aux_y += robot.speed * robot.direction;
-		
-		if(robot.hp <= 1){
-			return 2;
-		}
-		ciclos++;
+		camera_copia(cam, matriz, direita);
+		camera_copia(cam, matriz, esquerda);
 	}
-
 	free(coordenadas);
+	camera_libera_matriz(cam, matriz);
 	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
 	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
 	al_stop_timer(temporizador);
