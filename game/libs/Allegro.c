@@ -9,7 +9,6 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include "camera.h"
-#include "images.h"
 #include "status_bar.h"
 #include "targets.h"
 #include "characters.h"
@@ -17,6 +16,8 @@
 #include "start.h"
 #include "Aleatorio.h"
 #include "Centroide.h"
+#include "Allegro.h"
+
 #include "skills.h"
 
 #define TRUE 1

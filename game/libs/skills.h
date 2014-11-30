@@ -4,7 +4,11 @@
 typedef struct _skill{
 	int power;
 	int capacity;
-	image image;
+	int width;
+	int height;
+	int positionx;
+	int positiony;
+	ALLEGRO_BITMAP *image;
 }skill;
 
 //Constructor

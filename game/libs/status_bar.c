@@ -2,7 +2,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include "status_bar.h"
-#include "images.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -11,8 +10,8 @@ barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *ba
 	barstatus newbarstatus;
 	newbarstatus.total = allcapacity;
 	newbarstatus.atual = starting;
-	newbarstatus.imagem = newImage(barimage);
-	newbarstatus.imagem.positiony = position;
+	newbarstatus.positiony = position;
+	newbarstatus.image = barimage;
 	return newbarstatus;
 }
 
@@ -23,8 +22,7 @@ void drawStatusBar(barstatus bar) {
 	} else if (bar.total > bar.atual) {
 		while(TRUE) {
 			if(status < bar.atual) {
-				setBarPosition( bar, status, bar.imagem.positiony );
-				draw(bar.imagem);
+				al_draw_bitmap(bar.image, status, bar.positiony, 0);
 				status += status;
 			} else {
 				break;
@@ -40,9 +38,4 @@ void reduceBar(barstatus bar, int reduced) {
 
 void updateBar(barstatus bar, int up) {
 	bar.atual += up;
-}
-
-void setBarPosition(barstatus it, int x, int y) {
-	setPositionx(it.imagem, x);
-	setPositiony(it.imagem, y);
 }

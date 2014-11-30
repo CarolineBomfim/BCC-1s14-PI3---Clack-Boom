@@ -1,22 +1,25 @@
 #include <stdlib.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include "images.h"
 #include "targets.h"
 
 //Constructor
 target newTarget(ALLEGRO_BITMAP *img) {
 	target targetNew;
-	targetNew.imagem = newImage(img);
+	targetNew.image 				= img;
+	targetNew.height 				= al_get_bitmap_height(img);
+	targetNew.width 				= al_get_bitmap_width(img);
+	targetNew.positionx 		= 0;
+	targetNew.positiony 		= 0;
 	return targetNew;
 }
 
 void drawTarget(target select, int x, int y) {
 	setPositionTarget(select, x, y);
-	draw(select.imagem);
+	al_draw_bitmap(select.image, select.positionx, select.positiony, 0);
 }
 
 void setPositionTarget(target select, int x, int y){
-	setPositionx(select.imagem, x);
-	setPositiony(select.imagem, y);
+	select.positionx = x;
+	select.positiony = y;
 }

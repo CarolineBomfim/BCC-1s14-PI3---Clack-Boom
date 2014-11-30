@@ -1,9 +1,12 @@
 #ifndef _TARGET_H_
 #define _TARGET_H_
-#include "images.h"
 
 typedef struct _target {
-	image imagem;
+	int positionx;
+	int positiony;
+	int height;
+	int width;
+	ALLEGRO_BITMAP *image;
 }target;
 //Constructor
 
