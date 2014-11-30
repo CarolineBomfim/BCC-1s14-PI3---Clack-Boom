@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -std=c99 
+CFLAGS = -std=c99 -W
 EXEC = AngryRobots
 MAIN = src/AngryRobots/main.c
-LIBS = libs/*.c
+LIBS = $(wildcard libs/*.c)
 OBJ = *.o
 FLAGS = -lallegro -lallegro_color -lallegro_image -lallegro_font -lallegro_main -lallegro_ttf\
 				-lallegro_primitives -lallegro_audio -lallegro_acodec -lopencv_core -lopencv_highgui\
@@ -10,7 +10,7 @@ FLAGS = -lallegro -lallegro_color -lallegro_image -lallegro_font -lallegro_main 
 				-lopencv_objdetect -lopencv_contrib -lopencv_legacy -lm
 all: $(EXEC)
 
-$(OBJ): $(LIBS) $(MAIN)
+$(OBJ): $(MAIN) $(LIBS)
 	$(CC) $(CFLAGS) $^ -c
 
 $(EXEC): $(OBJ)

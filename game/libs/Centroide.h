@@ -22,7 +22,7 @@
 * v = Maximo * 100;
 */
 
-void RGB2HSV(int red, int green, int blue, int *h, int *s, int *v);
+void convertToHSV(int red, int green, int blue, int *h, int *s, int *v);
 
 void histograma(int *h, int *s, int *v);
 
@@ -32,5 +32,5 @@ void histograma(int *h, int *s, int *v);
  * A função 
  */
 
-int Centroid(camera *cam, int *coordenada);
+void center(camera *cam, unsigned char ***in, unsigned char ***out, int *coordenada);
 #endif

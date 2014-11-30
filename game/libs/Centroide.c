@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "camera.h"
 /**
 * @param red
@@ -22,7 +23,7 @@
 * v = Maximo * 100;
 */
 
-void RGB2HSV(int red, int green, int blue, int *h, int *s, int *v){
+void convertToHSV(int red, int green, int blue, int *h, int *s, int *v){
 	float r = (float)red/255;
 	float g = (float)green/255;
 	float b = (float)blue/255;
@@ -110,20 +111,19 @@ void histograma(int *h, int *s, int *v){
  * A função 
  */
 
-int Centroid(camera *cam, int *coordenada){
-	unsigned char ***imagem = cam->quadro;
+void center(camera *cam, int *coordenada){
 	int altura = cam->altura;
 	int largura = cam->largura;
 	int px = coordenada[0];
 	int py = coordenada[1];
 	int markx = 0, marky = 0, cn = 0;
-	int h, s, v;
 	for(int a = 0; a < altura; a++){
 		for(int b = 0; b < largura; b++){
-			RGB2HSV(
-				imagem[a][b][0],
-				imagem[a][b][1],
-				imagem[a][b][2],
+			int h, s, v;
+			convertToHSV(
+				cam->quadro[a][b][0],
+				cam->quadro[a][b][1],
+				cam->quadro[a][b][2],
 				&h, &s, &v
 			);
 			histograma(&h, &s, &v);
@@ -138,8 +138,4 @@ int Centroid(camera *cam, int *coordenada){
 		coordenada[0] = markx / cn;
 		coordenada[1] = marky / cn;
 	}
-	if(px == coordenada[0] && py == coordenada[1]){
-		return 0;
-	}
-	return 1;
 }

@@ -108,7 +108,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			return 1;
 		}
 		camera_atualiza(cam);
-		camera_copia(cam, matriz, direita);
+		camera_copia(cam, cam->quadro, direita);
 		camera_copia(cam, matriz, esquerda);
 	}
 	free(coordenadas);
