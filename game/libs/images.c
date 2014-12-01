@@ -43,6 +43,10 @@ void draw(image img) {
 	al_draw_bitmap(img.image, x, y, 0);
 }
 
+void drawBackground(image img) {
+	al_draw_bitmap(img.image, 0, 0, 0);
+}
+
 int *alocaPosition() {
 	int *x = malloc(sizeof(int));
 	return x;

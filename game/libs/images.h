@@ -25,6 +25,8 @@ int getPositiony(image img);
 
 void draw(image img);
 
+void drawBackground(image img);
+
 void clearImage(image img);
 
 image newImage(ALLEGRO_BITMAP *img);

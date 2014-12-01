@@ -9,12 +9,8 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_primitives.h>
 #include "../../libs/camera.h"
-#include "../../libs/status_bar.h"
-#include "../../libs/targets.h"
-#include "../../libs/characters.h"
 #include "../../libs/ArquivoLog.h"
 #include "../../libs/start.h"
-#include "../../libs/Aleatorio.h"
 #include "../../libs/Centroide.h"
 #include "../../libs/Allegro.h"
 #include "../../libs/menu.h"

@@ -2,29 +2,47 @@
 #define _CHARACTERS_H_
 #include "images.h"
 
-
 typedef struct _character {
-	int hp;
 	image imagem;
-	int speed;
-	int direction;
+	int *hp;
+	int *speed;
+	int *direction;
 }character;
 
-//Constructor
-character newCharacter(ALLEGRO_BITMAP *img, int life);
+void setCharacterDirectionx(character this, int x);
 
-void clearCharacter(character this);
+void setCharacterDirectiony(character this, int y);
 
-void drawCharacter(character this, int y, int x);
+void setCharacterPosition(character this, int x, int y);
+
+int getCharacterDirectionx(character this);
+
+int getCharacterDirectiony(character this);
+
+void setCharacterHp(character this, int hp);
+
+int getCharacterHp(character this);
+
+void setCharacterSpeed(character this, int speed);
+
+int getCharacterSpeed(character this);
+
+void hpCharacterUp(character this, int newHp);
+
+void hpCharacterDown(character this, int newHp);
+
+void moveCharacter(character this);
+
+void drawCharacter(character this);
 
 void speedCharacterUp(character this, int newSpeed);
 
 void speedCharacterDown(character this, int newSpeed);
 
-void setPositionCharacter(character this, int y, int x);
+void alocaCharacter(character this, int hp);
 
-void hpCharacterUp(character this, int newHp);
+void clearCharacter(character this;
 
-void hpCharacterDown(character this, int newHp);
+character newCharacter(ALLEGRO_BITMAP *img, int life);
 
 #endif

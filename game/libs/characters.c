@@ -3,22 +3,62 @@
 #include <allegro5/allegro_image.h>
 #include "images.h"
 #include "characters.h"
-//Constructor
-character newCharacter(ALLEGRO_BITMAP *img, int life) {
-	character charact;	
-	charact.hp				= life;
-	charact.imagem 		= newImage(img);
-	charact.speed 		= 1;
-	charact.direction = 1;
-	return charact;
+
+void setCharacterDirectionx(character this, int x) {
+	this.direction[0] = (x > 0 ? 1 : -1);
 }
 
-void clearCharacter(character this){
-	clearImage(this.imagem);
+void setCharacterDirectiony(character this, int y) {
+	if(y > 0) {
+		this.direction[1] = 1;
+	} else {
+		this.direction[1] = -1;
+	}
 }
 
-void drawCharacter(character this, int y, int x) {
-	setPositionCharacter(this, y, x);
+void setCharacterPosition(character this, int x, int y) {
+	setPositionx(this.imagem, x);
+	setPositiony(this.imagem, y);
+}
+
+int getCharacterDirectionx(character this) {
+	return this.direction[0];
+}
+
+int getCharacterDirectiony(character this) {
+	return this.direction[1];
+}
+
+void setCharacterHp(character this, int hp) {
+	this.hp[0] = hp;
+}
+int getCharacterHp(character this) {
+	return this.hp[0];
+}
+void setCharacterSpeed(character this, int speed) {
+	this.speed[0] = speed;
+}
+
+int getCharacterSpeed(character this) {
+	return this.speed[0];
+}
+
+
+void hpCharacterUp(character this, int newHp) {
+	this.hp[0] += newHp;
+}
+
+void hpCharacterDown(character this, int newHp) {
+	this.hp[0] -= newHp;
+}
+
+void moveCharacter(character this) {
+	int x = (getPositionx(this.imagem)+getCharacterSpeed(this))*getCharacterDirectionx(this);
+	int y = (getPositiony(this.imagem)+getCharacterSpeed(this))*getCharacterDirectiony(this);
+	setCharacterPosition(this, x, y);
+}
+
+void drawCharacter(character this) {
 	draw(this.imagem);
 }
 
@@ -30,15 +70,26 @@ void speedCharacterDown(character this, int newSpeed) {
 	this.speed -= newSpeed;
 }
 
-void setPositionCharacter(character this, int y, int x) {
-	setPositionx(this.imagem, x - this.imagem.width );
-	setPositiony(this.imagem,  y - this.imagem.height);
+void alocaCharacter(character this, int hp) {
+	this.hp = malloc(sizeof(int));
+	this.speed = malloc(sizeof(int));
+	this.direction = malloc(2*sizeof(int));
+	setCharacterHp(this, hp);
+	setCharacterPosition(this, 1, 1);
+	setCharacterSpeed(this, 1);
 }
 
-void hpCharacterUp(character this, int newHp) {
-	this.hp += newHp;
+void clearCharacter(character this){
+	clearImage(this.imagem);
+	free(this.speed);
+	free(this.direction);
+	free(this.hp);
 }
 
-void hpCharacterDown(character this, int newHp) {
-	this.hp -= newHp;
+//Constructor
+character newCharacter(ALLEGRO_BITMAP *img, int life) {
+	character charact;	
+	charact.imagem 		 = newImage(img);
+	alocaCharacter(charact, life);
+	return charact;
 }
