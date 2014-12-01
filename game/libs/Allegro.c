@@ -85,7 +85,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	image 					background 					= newImage(backgroundImg);
 	skill						bexiga 							= newSkill(bexigaImage, 10, 50);
 	target			 		targetSimple 	 			= newTarget(targetSimpleImg);
-		fprintf(stderr, "allalalala\n" );
 	target			 		targetSelected 			= newTarget(targetSelectedI);
 	barstatus				hp 						 			= newBar(100, 100, 10, barRed);
 	barstatus			 	power 				 			= newBar(100, 100, 60, barBlue);
@@ -124,11 +123,13 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		if(MovDetected){
 			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
 		}
+		moveCharacter(marvin);
 		// drawBackground(background);
 		camera_copia(cam, cam->quadro, esquerda);
 		drawStatusBar(hp);
 		drawStatusBar(power);
 		drawCharacter(marvin);
+		drawSkill(bexiga);
 		drawTarget(targetSimple);
 		al_flip_display();
 		al_clear_to_color(reset);

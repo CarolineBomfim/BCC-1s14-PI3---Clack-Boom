@@ -15,6 +15,10 @@ void setCharacterDirectiony(character this, int y);
 
 void setCharacterPosition(character this, int x, int y);
 
+int getCharacterPositionx(character this);
+
+int getCharacterPositiony(character this);
+
 int getCharacterDirectionx(character this);
 
 int getCharacterDirectiony(character this);
