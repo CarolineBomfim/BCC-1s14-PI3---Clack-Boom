@@ -85,6 +85,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	image 					background 					= newImage(backgroundImg);
 	skill						bexiga 							= newSkill(bexigaImage, 10, 50);
 	target			 		targetSimple 	 			= newTarget(targetSimpleImg);
+		fprintf(stderr, "allalalala\n" );
 	target			 		targetSelected 			= newTarget(targetSelectedI);
 	barstatus				hp 						 			= newBar(100, 100, 10, barRed);
 	barstatus			 	power 				 			= newBar(100, 100, 60, barBlue);
@@ -113,7 +114,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 			default:
 				break;
 		}
-
 		if(finalizar == 1){
 			return 1;
 		}

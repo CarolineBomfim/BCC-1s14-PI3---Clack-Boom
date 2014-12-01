@@ -4,15 +4,20 @@
 #include "images.h"
 #include "characters.h"
 
-void setCharacterDirectionx(character this, int x) {
-	this.direction[0] = (x > 0 ? 1 : -1);
-}
 
 void setCharacterDirectiony(character this, int y) {
-	if(y > 0) {
+	if (y > 0) {
 		this.direction[1] = 1;
 	} else {
 		this.direction[1] = -1;
+	}
+}
+
+void setCharacterDirectionx(character this, int x) {
+	if(x > 0) {
+		this.direction[0] = 1;
+	} else {
+		this.direction[0] = -1;
 	}
 }
 
@@ -89,7 +94,7 @@ void clearCharacter(character this){
 //Constructor
 character newCharacter(ALLEGRO_BITMAP *img, int life) {
 	character charact;	
-	charact.imagem 		 = newImage(img);
+	charact.imagem = newImage(img);
 	alocaCharacter(charact, life);
 	return charact;
 }

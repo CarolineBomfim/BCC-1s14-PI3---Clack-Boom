@@ -6,10 +6,11 @@ typedef struct _skill {
 	int *power;
 	int *capacity;
 	image image;
-} skill;
+}skill;
 
 //Constructor
 void setSkillCapacity(skill this, int c);
+int getSkillCapacity(skill this);
 void setSkillPower(skill this, int p);
 int getSkillPower(skill this);
 void setSkillActual(skill this, int a);
@@ -17,7 +18,7 @@ int getSkillActual(skill this);
 void drawSkill(skill itIs, int x, int y);
 void setPositionSkill(skill select, int x, int y);
 void alocaSkill(skill this, int p, int c);
-void clearSkill(skill this);
+void clearSkill(skill this) ;
 skill newSkill(ALLEGRO_BITMAP *img, int p, int c);
 
 #endif

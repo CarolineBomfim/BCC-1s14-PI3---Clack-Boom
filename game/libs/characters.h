@@ -41,7 +41,7 @@ void speedCharacterDown(character this, int newSpeed);
 
 void alocaCharacter(character this, int hp);
 
-void clearCharacter(character this;
+void clearCharacter(character this);
 
 character newCharacter(ALLEGRO_BITMAP *img, int life);
 
