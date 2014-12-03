@@ -70,12 +70,12 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	target			 		targetSimple 	 			= newTarget(targetSimpleImg);
 	target			 		targetSelected 			= newTarget(targetSelectedI);
 	barstatus				hp 						 			= newBar(100, 100, 10, barRed);
-	barstatus			 	power 				 			= newBar(100, 100, 60, barBlue);
-	character 			dog 								= newCharacter(dogImg, 100);
-	character 			marvin 							= newCharacter(marvinImg, 100);
-	character 			marvin2 						= newCharacter(marvin2Img, 100);
+	barstatus			 	power 				 			= newBar(100, 100, ALTURA - 10, barBlue);
+	// character 			dog 								= newCharacter(dogImg, 100);
+	// character 			marvin 							= newCharacter(marvinImg, 100);
+	// character 			marvin2 						= newCharacter(marvin2Img, 100);
+	// character 			robot 							= newCharacter(robotImg, 100);
 	character 			scorp 							= newCharacter(scorpImg, 100);
-	character 			robot 							= newCharacter(robotImg, 100);
 	ALLEGRO_COLOR 	blue 								= al_map_rgb(0,0,255);
 	ALLEGRO_COLOR 	green 							= al_map_rgb(0,255,0);
 	ALLEGRO_COLOR 	red 								= al_map_rgb(255,0,0);
@@ -85,29 +85,35 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_BITMAP 	*esquerda						= al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	ALLEGRO_EVENT 	evento;
 
-	setCharacterSpeed(scorp, 5);
+	setCharacterSpeed(scorp, 15);
 	while(TRUE){
+		ciclos++;
 		camera_atualiza(cam);
+		// MovDetectedCharacter(scorp, TRUE, TRUE);
+		camera_copia(cam, cam->quadro, esquerda);
 		// drawBackground(background);
-		
 
 		if(Centroid(cam, coordenadas, 1)){
 			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
-			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
-			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
-			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp) +60) &&
-			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {
-				setPositionTarget(targetSelected, coordenadas[0], coordenadas[1]);
+			setPositionTarget(targetSelected, coordenadas[0], coordenadas[1]);
+			drawTarget(targetSimple);
+			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp)-60) &&
+			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp)-60) &&
+			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp)+60) &&
+			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp)+60) ) {
 				drawTarget(targetSelected);
 			}
+
 		}
+
 		if(Centroid(cam, coordenadas, 0)) {
 			setSkillPosition(bexiga, coordenadas[0], coordenadas[1]);
 			setSkillActual(bexiga, getSkillActual(bexiga) - 1);
 			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
 			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
 			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp) +60) &&
-			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {				
+			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {
+			   hpCharacterDown(scorp, getSkillPower(bexiga));			
 			}
 			drawSkill(bexiga);
 		}
@@ -115,24 +121,32 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		// If entry in warning zone
 /*
 */
-		if(getCharacterPositionx(scorp) > (LARGURA-getImageWidth(scorp.imagem)) ||
-	   		getCharacterPositionx(scorp) < getImageWidth(scorp.imagem)) {
-			setCharacterDirectionx(scorp, (getCharacterDirectionx(scorp)*(-1)));
+		if(getCharacterPositionx(scorp) < (LARGURA-(getImageWidth(scorp.imagem)/10)) &&
+	   		getCharacterPositionx(scorp) > getImageWidth(scorp.imagem)) {
+					setCharacterPosition(scorp, getCharacterPositionx(scorp)+
+					  (getCharacterSpeed(scorp)*getCharacterDirectionx(scorp)), getCharacterPositiony(scorp));				
+		} else {
+				setCharacterDirectionx(scorp, (getCharacterDirectionx(scorp)*(-1)));
+				setCharacterPosition(scorp, getCharacterPositionx(scorp)+
+				   (getCharacterSpeed(scorp)*getCharacterDirectionx(scorp)), getCharacterPositiony(scorp));
 		}
 
-		if(getCharacterPositiony(scorp) > ALTURA-getImageHeight(scorp.imagem) ||
-				getCharacterPositiony(scorp) < getImageHeight(scorp.imagem)) {
-			setCharacterDirectiony(scorp, (getCharacterDirectiony(scorp)*(-1)));
-		}
-/*
-*/
+		if(getCharacterPositiony(scorp) < (ALTURA-(getImageHeight(scorp.imagem)/10)) &&
+				getCharacterPositiony(scorp) > getImageHeight(scorp.imagem)) {
+					setCharacterPosition(scorp, getCharacterPositionx(scorp),
+					  getCharacterPositiony(scorp)+(getCharacterSpeed(scorp)*getCharacterDirectiony(scorp)) );
+		} else {
+				setCharacterDirectiony(scorp, (getCharacterDirectiony(scorp)*(-1)));
+				setCharacterPosition(scorp, getCharacterPositionx(scorp),
+				   getCharacterPositiony(scorp)+(getCharacterSpeed(scorp)*getCharacterDirectiony(scorp)) );
+			}
+
 		//Draw in interface
+		drawCharacter(scorp);
 		drawStatusBar(hp);
 		drawStatusBar(power);
-		drawCharacter(scorp);
-		drawTarget(targetSimple);
-		al_clear_to_color(reset);
 		al_flip_display();
+		al_clear_to_color(reset);
 	}
 
 	free(coordenadas);
@@ -141,11 +155,11 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	clearTarget(targetSelected);
 	clearBar(hp);
 	clearBar(power);
-	clearCharacter(dog);
-	clearCharacter(marvin);
-	clearCharacter(marvin2);
+	// clearCharacter(dog);
+	// clearCharacter(marvin);
+	// clearCharacter(marvin2);
+	// clearCharacter(robot);
 	clearCharacter(scorp);
-	clearCharacter(robot);
 	clearImage(background);
 	al_destroy_bitmap(backgroundImg);
 	al_destroy_bitmap(dogImg);

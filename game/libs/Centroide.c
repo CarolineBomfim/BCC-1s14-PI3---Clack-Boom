@@ -109,13 +109,6 @@ int Centroid(camera *cam, int *coordenada, int type){
 	int py = coordenada[1];
 	int markx = 0, marky = 0, cn = 0;
 	int h, s, v, hsv;
-	if (type == 1) {
-		// red
-		hsv = ((h < 30 && s > 75 && v > 75) ? TRUE : FALSE); 
-	} else if (type == 0 ){
-		// blue
-		hsv = ((h > 220 && s > 75 && v > 75) ? TRUE : FALSE);
-	}
 	for(int a = 0; a < altura; a++){
 		for(int b = 0; b < largura; b++){
 			RGB2HSV(
@@ -124,6 +117,15 @@ int Centroid(camera *cam, int *coordenada, int type){
 				imagem[a][b][2],
 				&h, &s, &v
 			);
+
+			if (type == 1) {
+				// red
+				hsv = ((h < 25 && s > 75 && v > 75) ? TRUE : FALSE); 
+			} else if (type == 0 ){
+				// white
+				hsv = ((h < 25 && s < 25 && v > 75) ? TRUE : FALSE);
+			}
+
 			if(hsv){
 				marky += a;
 				markx += b;

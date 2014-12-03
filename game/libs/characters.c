@@ -88,8 +88,6 @@ void speedCharacterDown(character this, int newSpeed) {
 	this.speed -= newSpeed;
 }
 
-
-
 void clearCharacter(character this){
 	clearImage(this.imagem);
 	free(this.speed);
@@ -105,8 +103,8 @@ character newCharacter(ALLEGRO_BITMAP *img, int life) {
 	charact.speed = malloc(sizeof(int));
 	charact.direction = malloc(2*sizeof(int));
 	setCharacterHp(charact, life);
-	setCharacterPosition(charact, charact.imagem.width, charact.imagem.height);
-	setCharacterSpeed(charact, 1);
+	setCharacterPosition(charact, charact.imagem.width + 10, charact.imagem.height + 10);
+	setCharacterSpeed(charact, 10);
 	setCharacterDirectiony(charact, 1);
 	setCharacterDirectionx(charact, 1);
 	return charact;
