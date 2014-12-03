@@ -137,6 +137,9 @@ int Centroid(camera *cam, int *coordenada, int type){
 		coordenada[0] = markx / cn;
 		coordenada[1] = marky / cn;
 	}
+	if(type == 0) {
+		return 1;
+	}
 	if(px == coordenada[0] && py == coordenada[1]){
 		return 0;
 	}

@@ -4,7 +4,7 @@
 
 typedef struct _barstatus {
 	int total;
-	int atual;
+	int *atual;
 	int positiony;
 	image imagem;
 }barstatus;
@@ -15,7 +15,8 @@ barstatus newBar(int allcapacity, int starting, int position, ALLEGRO_BITMAP *ba
 void clearBar(barstatus this);
 
 void drawStatusBar(barstatus bar);
-
+void setBar(barstatus this, int x);
+int getBar(barstatus this);
 void reduceBar(barstatus bar, int reduced);
 
 void updateBar(barstatus bar, int up);

@@ -31,6 +31,10 @@ void StartGame(){
 		erro("Falha ao reservar audio simples");
 	}
 
+	if(!al_install_mouse()) {
+		erro("Falha ao iniciar o mouse");
+	}
+
 }
 
 void EndGame(){

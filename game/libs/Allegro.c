@@ -62,8 +62,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	int 						MovDetected 				= 0;
 	int 						finalizar 					= 0;
 	int 						ciclos 							= 1;
-	int 						aux_x 							= LARGURA/2;
-	int							aux_y 							= ALTURA/2;
 	int 						*coordenadas 				= malloc(2*sizeof(int));
 	image 					background 					= newImage(backgroundImg);
 	skill						bexiga 							= newSkill(bexigaImage, 10, 50);
@@ -83,10 +81,19 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_COLOR 	reset 							= al_map_rgb(0,0,0);
 	ALLEGRO_BITMAP 	*buffer 						= al_get_backbuffer(display);
 	ALLEGRO_BITMAP 	*esquerda						= al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
-	ALLEGRO_EVENT 	evento;
-
+	ALLEGRO_EVENT_QUEUE *fila_eventos = NULL;
+	int *aux= malloc(2*sizeof(int));
+	fila_eventos = al_create_event_queue();
+	al_set_system_mouse_cursor(display, ALLEGRO_SYSTEM_MOUSE_CURSOR_DEFAULT);
+	al_register_event_source(fila_eventos, al_get_mouse_event_source());
 	setCharacterSpeed(scorp, 15);
 	while(TRUE){
+		if(getBar(hp) == 0 || getBar(power) == 0) {
+			fprintf(stderr, "%s\n", "Suas bexigas acabaram =(\n não desista, tente novamente" );
+		}
+	ALLEGRO_EVENT 	evento;
+	al_wait_for_event(fila_eventos, &evento);
+ 
 		ciclos++;
 		camera_atualiza(cam);
 		// MovDetectedCharacter(scorp, TRUE, TRUE);
@@ -106,16 +113,19 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 
 		}
 
-		if(Centroid(cam, coordenadas, 0)) {
+		if(evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP) {
+//		if(Centroid(cam, aux, 0)) {
 			setSkillPosition(bexiga, coordenadas[0], coordenadas[1]);
 			setSkillActual(bexiga, getSkillActual(bexiga) - 1);
 			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
 			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
 			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp) +60) &&
 			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {
-			   hpCharacterDown(scorp, getSkillPower(bexiga));			
+			   hpCharacterDown(scorp, getSkillPower(bexiga));
+			 	 reduceBar(hp, 10);
 			}
 			drawSkill(bexiga);
+			reduceBar(power, 5);
 		}
 
 		// If entry in warning zone
@@ -148,7 +158,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 		al_flip_display();
 		al_clear_to_color(reset);
 	}
-
+	free(aux);
 	free(coordenadas);
 	clearSkill(bexiga);
 	clearTarget(targetSimple);
@@ -161,6 +171,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	// clearCharacter(robot);
 	clearCharacter(scorp);
 	clearImage(background);
+	al_destroy_event_queue(fila_eventos);
 	al_destroy_bitmap(backgroundImg);
 	al_destroy_bitmap(dogImg);
 	al_destroy_bitmap(marvinImg);
