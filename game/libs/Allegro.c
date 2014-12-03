@@ -27,20 +27,7 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
     
 	int LARGURA = cam->largura;
 	int ALTURA = cam->altura;
-	
-	ALLEGRO_TIMER *temporizador = al_create_timer(1.0/FPS);
-	if(!temporizador){
-		erro("Falha ao criar temporizador.");
-	} else {
-		ArquivoLog("Temporizador criado com sucesso");
-	}
 
-	ALLEGRO_EVENT_QUEUE *EventoQueue = al_create_event_queue();
-	if(!EventoQueue){
-		erro("Falha ao criar evento QUEUE");
-	} else {
-		ArquivoLog("Evento QUEUE criado com sucesso.");
-	}
 
 	// ALLEGRO_SAMPLE *sample = al_load_sample("res/song/dispara.wav");;
 	ALLEGRO_FONT 	 *Comics 					= al_load_font("res/fonts/comic.ttf", 20, 0);
@@ -70,12 +57,8 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	// ArquivoLog("Audios carregados com sucesso.");
 	// }
 
-	ArquivoLog("Sucesso ao carregar e criar fonte, imagens e eventos.");
+	ArquivoLog("All file load success.");
 
-	al_register_event_source(EventoQueue, al_get_timer_event_source(temporizador));
-	al_register_event_source(EventoQueue, al_get_display_event_source(display));
-
-	al_start_timer(temporizador);
 	int 						MovDetected 				= 0;
 	int 						finalizar 					= 0;
 	int 						ciclos 							= 1;
@@ -102,35 +85,41 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	ALLEGRO_BITMAP 	*esquerda						= al_create_sub_bitmap(buffer, 0, 0, LARGURA, ALTURA);
 	ALLEGRO_EVENT 	evento;
 
+	setCharacterSpeed(scorp, 5);
 	while(TRUE){
-		al_wait_for_event(EventoQueue, &evento);
-		switch(evento.type){
-			case ALLEGRO_EVENT_DISPLAY_CLOSE:
-				finalizar = 1;
-				ArquivoLog("Finalizado pelo usuario!");
-				break;
-
-			default:
-				break;
-		}
-		if(finalizar == 1){
-			return 1;
-		}
-
 		camera_atualiza(cam);
-		MovDetected = Centroid(cam, coordenadas);
-
-		if(MovDetected){
-			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
-		}
-		moveCharacter(marvin);
 		// drawBackground(background);
 		camera_copia(cam, cam->quadro, esquerda);
+
+		if(Centroid(cam, coordenadas)){
+			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
+			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
+			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
+			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp) +60) &&
+			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {
+				setPositionTarget(targetSelected, coordenadas[0], coordenadas[1]);
+				drawTarget(targetSelected);
+			}
+		}
+		// If entry in warning zone
+		if(getCharacterPositionx(scorp) > (LARGURA-getImageWidth(scorp.imagem)) ||
+	   		getCharacterPositionx(scorp) < getImageWidth(scorp.imagem)) {
+			setCharacterDirectionx(scorp, (getCharacterDirectionx(scorp)*(-1)));
+		}
+
+		if(getCharacterPositiony(scorp) > ALTURA-getImageHeight(scorp.imagem) ||
+				getCharacterPositiony(scorp) < getImageHeight(scorp.imagem)) {
+			setCharacterDirectiony(scorp, (getCharacterDirectiony(scorp)*(-1)));
+		}
+
+		moveCharacter(scorp, TRUE, FALSE);
+
+		//Draw in interface
 		drawStatusBar(hp);
 		drawStatusBar(power);
-		drawCharacter(marvin);
-		drawSkill(bexiga);
+		drawCharacter(scorp);
 		drawTarget(targetSimple);
+		drawSkill(bexiga);
 		al_flip_display();
 		al_clear_to_color(reset);
 	}
@@ -147,9 +136,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	clearCharacter(scorp);
 	clearCharacter(robot);
 	clearImage(background);
-	al_unregister_event_source(EventoQueue, al_get_timer_event_source(temporizador));
-	al_unregister_event_source(EventoQueue, al_get_display_event_source(display));
-	al_stop_timer(temporizador);
 	al_destroy_bitmap(backgroundImg);
 	al_destroy_bitmap(dogImg);
 	al_destroy_bitmap(marvinImg);
@@ -159,8 +145,6 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	al_destroy_bitmap(bexigaImage);
 	al_destroy_bitmap(targetSimpleImg);
 	al_destroy_bitmap(targetSelectedI);
-	al_destroy_timer(temporizador);
-	al_destroy_event_queue(EventoQueue);
 	
 	return 0;
 }

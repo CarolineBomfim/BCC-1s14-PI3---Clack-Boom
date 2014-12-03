@@ -23,6 +23,10 @@ int getPositionx(image img);
 
 int getPositiony(image img);
 
+int getImageHeight(image img);
+
+int getImageWidth(image img);
+
 void draw(image img);
 
 void drawBackground(image img);

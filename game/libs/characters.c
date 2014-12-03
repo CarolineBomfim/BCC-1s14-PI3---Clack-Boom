@@ -64,9 +64,15 @@ void hpCharacterDown(character this, int newHp) {
 	this.hp[0] -= newHp;
 }
 
-void moveCharacter(character this) {
-	int x = (getCharacterPositionx(this)+getCharacterSpeed(this))*getCharacterDirectionx(this);
-	int y = (getCharacterPositiony(this)+getCharacterSpeed(this))*getCharacterDirectiony(this);
+void moveCharacter(character this, int moveInX, int moveInY) {
+	int x = 0;
+	int y = 0;
+	if(moveInX) {
+		x = (getCharacterPositionx(this)+getCharacterSpeed(this))*getCharacterDirectionx(this);
+	} 
+	if(moveInY) {
+		y = (getCharacterPositiony(this)+getCharacterSpeed(this))*getCharacterDirectiony(this);
+	}
 	setCharacterPosition(this, x, y);
 }
 
@@ -99,7 +105,7 @@ character newCharacter(ALLEGRO_BITMAP *img, int life) {
 	charact.speed = malloc(sizeof(int));
 	charact.direction = malloc(2*sizeof(int));
 	setCharacterHp(charact, life);
-	setCharacterPosition(charact, 1, 1);
+	setCharacterPosition(charact, charact.imagem.width, charact.imagem.height);
 	setCharacterSpeed(charact, 1);
 	setCharacterDirectiony(charact, 1);
 	setCharacterDirectionx(charact, 1);

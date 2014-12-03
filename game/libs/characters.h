@@ -35,7 +35,7 @@ void hpCharacterUp(character this, int newHp);
 
 void hpCharacterDown(character this, int newHp);
 
-void moveCharacter(character this);
+void moveCharacter(character this, int moveInX, int moveInY);
 
 void drawCharacter(character this);
 

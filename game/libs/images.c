@@ -27,6 +27,14 @@ int getPositiony(image img) {
 	return img.positiony[0];
 }
 
+int getImageHeight(image img) {
+	return img.height;
+}
+
+int getImageWidth(image img) {
+	return img.width;
+}
+
 void draw(image img) {
 	int x = 0, y = 0;
 	if(getPositionx(img) <= (img.screen_width - img.width)) {
