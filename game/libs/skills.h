@@ -14,7 +14,7 @@ int getSkillPower(skill this);
 void setSkillActual(skill this, int a);
 int getSkillActual(skill this);
 void drawSkill(skill this);
-void setPositionSkill(skill select, int x, int y);
+void setSkillPosition(skill select, int x, int y);
 void clearSkill(skill this);
 skill newSkill(ALLEGRO_BITMAP *img, int power, int capacity);
 #endif

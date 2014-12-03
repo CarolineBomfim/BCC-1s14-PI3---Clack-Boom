@@ -89,9 +89,9 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 	while(TRUE){
 		camera_atualiza(cam);
 		// drawBackground(background);
-		camera_copia(cam, cam->quadro, esquerda);
+		
 
-		if(Centroid(cam, coordenadas)){
+		if(Centroid(cam, coordenadas, 1)){
 			setPositionTarget(targetSimple, coordenadas[0], coordenadas[1]);
 			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
 			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
@@ -101,7 +101,20 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 				drawTarget(targetSelected);
 			}
 		}
+		if(Centroid(cam, coordenadas, 0)) {
+			setSkillPosition(bexiga, coordenadas[0], coordenadas[1]);
+			setSkillActual(bexiga, getSkillActual(bexiga) - 1);
+			if(getPositionx(targetSimple.imagem) > (getCharacterPositionx(scorp) -60) &&
+			   getPositiony(targetSimple.imagem) > (getCharacterPositiony(scorp) -60) &&
+			   getPositionx(targetSimple.imagem) < (getCharacterPositionx(scorp) +60) &&
+			   getPositiony(targetSimple.imagem) < (getCharacterPositiony(scorp) +60) ) {				
+			}
+			drawSkill(bexiga);
+		}
+
 		// If entry in warning zone
+/*
+*/
 		if(getCharacterPositionx(scorp) > (LARGURA-getImageWidth(scorp.imagem)) ||
 	   		getCharacterPositionx(scorp) < getImageWidth(scorp.imagem)) {
 			setCharacterDirectionx(scorp, (getCharacterDirectionx(scorp)*(-1)));
@@ -111,17 +124,15 @@ int Allegro(camera *cam, ALLEGRO_DISPLAY *display){
 				getCharacterPositiony(scorp) < getImageHeight(scorp.imagem)) {
 			setCharacterDirectiony(scorp, (getCharacterDirectiony(scorp)*(-1)));
 		}
-
-		moveCharacter(scorp, TRUE, FALSE);
-
+/*
+*/
 		//Draw in interface
 		drawStatusBar(hp);
 		drawStatusBar(power);
 		drawCharacter(scorp);
 		drawTarget(targetSimple);
-		drawSkill(bexiga);
-		al_flip_display();
 		al_clear_to_color(reset);
+		al_flip_display();
 	}
 
 	free(coordenadas);

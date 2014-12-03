@@ -86,7 +86,7 @@ int Menu(camera *cam, ALLEGRO_DISPLAY *display, int tentativas){
 			al_draw_text(Comics, green, LARGURA/2, 100, 0, "Parabens! Deseja tentar novamente? ");
 		}
 		camera_atualiza(cam);
-		int MovDetected = Centroid(cam, coordenadas);
+		int MovDetected = Centroid(cam, coordenadas, 1);
 		al_draw_bitmap(target, coordenadas[0] - 30,coordenadas[1] - 30, 0);
 		int targetx = coordenadas[0];
 		

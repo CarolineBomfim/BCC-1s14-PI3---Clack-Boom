@@ -3,7 +3,7 @@
 
 #define TRUE 1
 #define FALSE 0
-#define HSV ((h < 50 && s > 75 && v > 75) ? TRUE : FALSE) 
+
 
 /**
 * @param red
@@ -101,14 +101,21 @@ void RGB2HSV(int red, int green, int blue, int *h, int *s, int *v){
  * @param *coordenada contem o ponto em x e y 
  * A função 
  */
-int Centroid(camera *cam, int *coordenada){
+int Centroid(camera *cam, int *coordenada, int type){
 	unsigned char ***imagem = cam->quadro;
 	int altura = cam->altura;
 	int largura = cam->largura;
 	int px = coordenada[0];
 	int py = coordenada[1];
 	int markx = 0, marky = 0, cn = 0;
-	int h, s, v;
+	int h, s, v, hsv;
+	if (type == 1) {
+		// red
+		hsv = ((h < 30 && s > 75 && v > 75) ? TRUE : FALSE); 
+	} else if (type == 0 ){
+		// blue
+		hsv = ((h > 220 && s > 75 && v > 75) ? TRUE : FALSE);
+	}
 	for(int a = 0; a < altura; a++){
 		for(int b = 0; b < largura; b++){
 			RGB2HSV(
@@ -117,7 +124,7 @@ int Centroid(camera *cam, int *coordenada){
 				imagem[a][b][2],
 				&h, &s, &v
 			);
-			if(HSV){
+			if(hsv){
 				marky += a;
 				markx += b;
 				cn++;

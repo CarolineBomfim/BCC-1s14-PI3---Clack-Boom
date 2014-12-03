@@ -11,7 +11,6 @@
 #include "../../libs/camera.h"
 #include "../../libs/ArquivoLog.h"
 #include "../../libs/start.h"
-#include "../../libs/Centroide.h"
 #include "../../libs/Allegro.h"
 #include "../../libs/menu.h"
 

@@ -32,5 +32,5 @@ void histograma(int *h, int *s, int *v);
  * A função 
  */
 
-int Centroid(camera *cam, int *coordenada);
+int Centroid(camera *cam, int *coordenada, int type);
 #endif

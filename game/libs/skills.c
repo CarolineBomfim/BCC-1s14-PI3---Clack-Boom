@@ -31,7 +31,7 @@ void drawSkill(skill this){
 	draw(this.imagem);
 }
 
-void setPositionSkill(skill select, int x, int y){
+void setSkillPosition(skill select, int x, int y){
 	setPositionx(select.imagem, x - getPositionx(select.imagem));
 	setPositiony(select.imagem, y - getPositiony(select.imagem));
 }
